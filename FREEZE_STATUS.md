@@ -1,33 +1,62 @@
-# Pre-live Freeze Status v0.4
+# Pre-live Freeze Status
 
-**Overall: NOT FROZEN / NO LIVE MODEL RUNS.**
+**Overall: PARTIALLY FROZEN / NO LIVE MODEL RUNS.**
 
-## Verified from public sources
-- Candidate model: `Qwen/Qwen3-4B-Instruct-2507`.
-- Pinned tokenizer/template revision: `cdbee75f17c01a7cc42f958dc650907174af0554` (Qwen commit updating `tokenizer_config.json`).
-- Official Hugging Face file metadata reports `tokenizer.json` SHA-256 `aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4`.
-- The pinned 2507 chat template ends a generation prompt with the ordinary assistant header and contains no Qwen3 thinking-template machinery.
-- External-vector target: `vectors_step95_bal.pt`, mirrored by `Teachafy/speakable-welfare-axes-artifacts`, with stated upstream provenance `nickmahdavi/functional-welfare` (third-party reproduction of Han et al. 2026).
-- Published independent methodology fixes the trained treatment positions to Mold block-input layer 24 and Gold block-input layer 21, with reported norms about 19.34 and 12.10 respectively.
+## Vector byte freeze — PASS
+The external vector artifact is now byte-frozen and committed as metadata in `artifact_manifest.frozen.json`.
 
-## Not yet byte-frozen
-- exact `vectors_step95_bal.pt` bytes / local SHA-256 / byte size;
-- exact mirror repository revision used to acquire those bytes;
-- object-key/index mapping inside that `.pt` file;
-- local `tokenizer_config.json` SHA-256;
-- A/C/D1 exact token-match result.
+Frozen artifact:
+- repository mirror: `Teachafy/speakable-welfare-axes-artifacts`
+- immutable revision: `8f4df5b5b14ecb4bcc5b20209bdfe2574d1ebee8`
+- filename: `vectors_step95_bal.pt`
+- size: 739325 bytes
+- SHA-256: `bd90129eaf5a7d92933ed6e536613eaeebf81486b62f68e11b5dc2d6d385e297`
 
-The current environment cannot fetch the required Hugging Face/Xet bytes into the container and does not contain `transformers`/`tokenizers`. This is an instrumentation limitation, **not a pass**.
+Safe structure inspection used `torch.load(..., map_location="cpu", weights_only=True)` with PyTorch 2.10.0+cpu.
 
-## v0.4 completion route
-`run_episode_free_audit.py` now orchestrates the remaining gates using only a vector artifact and tokenizer-only snapshot. It rejects model-weight-like files in the tokenizer snapshot and emits `episode_free_audit.json` only if:
-1. tokenizer bytes and pinned `tokenizer.json` hash pass;
-2. vector structure can be safe-loaded with `weights_only=True`;
-3. explicit Gold/Mold mapping reconciles dimension/layer/norm references;
-4. a role-clause triplet is found solely among the precommitted variants;
-5. the final tokenizer audit re-checks **that exact selected triplet** across all 12 families.
+The artifact itself contains explicit keys and layer metadata:
+- `v_mold`: shape [36, 2560], float32
+- `v_gold`: shape [36, 2560], float32
+- `layer_mold = 24`
+- `layer_gold = 21`
+- `ckpt = ckpts_g64_envfix/step_95`
+- `per_class = 5000`
+- `balanced = True`
 
-A passing output status is `READY_FOR_ADVERSARIAL_REVIEW_NOT_LIVE_RUN`. It is deliberately not authority to load the language model.
+Independent norm reconciliation:
+- Mold layer 24 norm = 19.339996337890625 (published reference about 19.34)
+- Gold layer 21 norm = 12.101578712463379 (published reference about 12.10)
 
-## v0.5 acquisition status
-A deterministic passive acquisition helper is now included. In the current ChatGPT execution environment, direct Hugging Face/Xet byte downloads and package installation are network-blocked, so the helper itself has been statically tested but the remote bytes have **not** been falsely marked acquired. The next legitimate state transition occurs only when `passive_acquisition_manifest.json` is produced on a network-capable environment and the downstream byte/token audits pass.
+The semantic mapping was **not** inferred by choosing whichever tensors happened to match the published norms. The artifact names the vectors and layer indices explicitly; norm agreement is only an independent consistency check.
+
+## Tokenizer byte audit — PASS
+Pinned model/tokenizer:
+- `Qwen/Qwen3-4B-Instruct-2507`
+- revision: `cdbee75f17c01a7cc42f958dc650907174af0554`
+
+Verified passive snapshot:
+- `tokenizer.json` SHA-256: `aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4`
+- `tokenizer_config.json` SHA-256: `a62ff0a2472a0fa1b8eaabcb57c59b58afa42a22831dc141400b6e0cf2b65ce3`
+- chat-template SHA-256: `64f85b198065d0fba2a81f37e10ed68161ce2c19a754c7100e67e0ca2ee9c326`
+- tokenizer class: `Qwen2Tokenizer`
+- thinking-template machinery: absent
+- model-weight-like files in tokenizer snapshot: none
+
+No language-model weights were acquired or loaded.
+
+## Tokenizer exact A/C/D1 matching — NOT YET PASSING
+The first finite precommitted semantic role-clause set produced **no exact token-position match** across A/C/D1.
+
+This is a valid pre-inference instrumentation failure, not permission to relax the gate. No activations have been observed. A tokenizer-only diagnostic pass is being used to design a new finite semantic variant set before any live inference.
+
+## Remaining gates
+1. Find and freeze an exact A/C/D1 tokenizer match using only versioned semantic variants.
+2. Re-run the final tokenizer audit across all 12 families.
+3. Assemble one adversarial/referee packet.
+4. Separate scientific + ethical go/no-go decision.
+
+A future passing episode-free status is still only:
+
+`READY_FOR_ADVERSARIAL_REVIEW_NOT_LIVE_RUN`
+
+It is deliberately **not** authority to load or run Qwen model weights.
