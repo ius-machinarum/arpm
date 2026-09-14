@@ -35,7 +35,7 @@ block-input layers 18–27 inclusive, using the corresponding vMold vector at ea
 
 This is robustness only and cannot rescue layer-24 failure.
 
-## Naive semantic control — pending byte freeze
+## Naive semantic control — byte-frozen
 Fable requested a same-mirror naive Mold control:
 `vectors_naive_faithful_pc5000.pt`
 
