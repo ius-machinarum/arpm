@@ -6,7 +6,11 @@ on:
       - ".github/workflows/referee-bundle.yml"
       - "REFEREE_PACKET.md"
       - "REFEREE_RESPONSE_v0_6.md"
+      - "REFEREE_RESPONSE_v0_7.md"
       - "artifact_manifest.frozen.json"
+      - "naive_control_manifest.frozen.json"
+      - "specificity_geometry.frozen.json"
+      - "random_direction_freeze.frozen.json"
       - "tokenizer_match.frozen.json"
       - "specificity_manifest.frozen.json"
       - "episode_free_audit.frozen.json"
@@ -25,6 +29,7 @@ on:
       - "inspect_vector_artifact.py"
       - "freeze_vector_artifact.py"
       - "freeze_naive_artifact.py"
+      - "specificity_geometry_audit.py"
       - "specificity_controls.py"
       - "run_episode_free_audit.py"
       - "test_prompts_static.py"
@@ -33,7 +38,9 @@ on:
       - "test_acquisition_static.py"
       - "acquire_passive_artifacts.py"
       - "reviews/FABLE_REFEREE_v0_6.md"
+      - "reviews/FABLE_REFEREE_v0_7.md"
       - "reviews/s_condition_feasibility.py"
+      - "reviews/factorial_2x2_feasibility.py"
   workflow_dispatch:
 
 permissions:
@@ -43,11 +50,8 @@ jobs:
   bundle:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Use Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
@@ -59,48 +63,36 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           forbidden={".safetensors",".bin",".ckpt",".pth",".onnx",".gguf"}
-          bad=[]
-          for p in Path("passive_inputs").rglob("*"):
-              if p.is_file() and (p.suffix.lower() in forbidden or p.name.lower().startswith("model-")):
-                  bad.append(str(p))
-          if bad:
-              raise SystemExit(f"Forbidden model-weight-like files acquired: {bad}")
+          bad=[str(p) for p in Path("passive_inputs").rglob("*")
+               if p.is_file() and (p.suffix.lower() in forbidden or p.name.lower().startswith("model-"))]
+          if bad: raise SystemExit(f"Forbidden model-weight-like files: {bad}")
           print("PASSIVE_ONLY_GUARD_PASS")
           PY
 
-      - name: Install random-control dependency
-        run: |
-          python -m pip install --disable-pip-version-check --no-input "numpy==2.4.6"
-
       - name: Regenerate frozen random cohort
         run: |
-          python specificity_controls.py --out random_direction_freeze.json
+          python -m pip install --disable-pip-version-check --no-input "numpy>=2.4.4,<2.5"
+          python specificity_controls.py --out random_direction_regenerated.json
 
-      - name: Assemble bundle
+      - name: Assemble v0.8 bundle
         run: |
           set -euo pipefail
           mkdir -p referee_bundle/tokenizer referee_bundle/vector referee_bundle/repo/reviews
 
-          cp REFEREE_PACKET.md REFEREE_RESPONSE_v0_6.md referee_bundle/
-          cp artifact_manifest.frozen.json tokenizer_match.frozen.json specificity_manifest.frozen.json episode_free_audit.frozen.json referee_bundle/
+          cp REFEREE_PACKET.md REFEREE_RESPONSE_v0_6.md REFEREE_RESPONSE_v0_7.md referee_bundle/
+          cp artifact_manifest.frozen.json naive_control_manifest.frozen.json specificity_geometry.frozen.json random_direction_freeze.frozen.json referee_bundle/
+          cp tokenizer_match.frozen.json specificity_manifest.frozen.json episode_free_audit.frozen.json referee_bundle/
 
           cp PROTOCOL.md ETHICS_CHARTER.md STATS_PLAN.md PROMPT_MATCHING.md VECTOR_PROVENANCE.md SPECIFICITY_PLAN.md TOKENIZER_CALIBRATION_LOG.md SOURCES.md STATUS.md FREEZE_STATUS.md README.md VERSION referee_bundle/repo/
-          cp role_clause_variants.py prompts_minimal_gate.py search_token_matched_roles.py audit_prompts_tokenizer_only.py tokenizer_snapshot_audit.py inspect_vector_artifact.py freeze_vector_artifact.py freeze_naive_artifact.py specificity_controls.py run_episode_free_audit.py acquire_passive_artifacts.py referee_bundle/repo/
+          cp role_clause_variants.py prompts_minimal_gate.py search_token_matched_roles.py audit_prompts_tokenizer_only.py tokenizer_snapshot_audit.py inspect_vector_artifact.py freeze_vector_artifact.py freeze_naive_artifact.py specificity_geometry_audit.py specificity_controls.py run_episode_free_audit.py acquire_passive_artifacts.py referee_bundle/repo/
           cp test_prompts_static.py test_episode_free_static.py test_freeze_static.py test_acquisition_static.py artifact_manifest.template.json requirements_episode_free.txt referee_bundle/repo/
-          cp reviews/FABLE_REFEREE_v0_6.md reviews/s_condition_feasibility.py referee_bundle/repo/reviews/
+          cp reviews/FABLE_REFEREE_v0_6.md reviews/FABLE_REFEREE_v0_7.md reviews/s_condition_feasibility.py reviews/factorial_2x2_feasibility.py referee_bundle/repo/reviews/
 
           cp passive_inputs/tokenizer_only/tokenizer.json passive_inputs/tokenizer_only/tokenizer_config.json passive_inputs/tokenizer_only/vocab.json passive_inputs/tokenizer_only/merges.txt referee_bundle/tokenizer/
           cp passive_inputs/vector/vectors_step95_bal.pt passive_inputs/vector/vectors_naive_faithful_pc5000.pt referee_bundle/vector/
-          cp passive_inputs/passive_acquisition_manifest.json random_direction_freeze.json referee_bundle/
+          cp passive_inputs/passive_acquisition_manifest.json random_direction_regenerated.json referee_bundle/
 
-          printf '%s\n' \
-            'ARPM Minimal A/S/D1 v0.7 second-round adversarial referee bundle.' \
-            'Status: READY_FOR_SECOND_ADVERSARIAL_REVIEW_NOT_LIVE_RUN.' \
-            'No live experimental model inference has been performed.' \
-            'The included .pt files are small external analysis-vector artifacts, not language-model weights.' \
-            'The included tokenizer files are tokenizer/chat-template assets only.' \
-            'Verify SHA256SUMS.txt before relying on any claimed hash.' \
-            > referee_bundle/README_FOR_REFEREE.txt
+          printf '%s\n'             'ARPM Minimal factorial A/S/C0/D1 v0.8 third-round adversarial referee bundle.'             'Status: READY_FOR_THIRD_ADVERSARIAL_REVIEW_NOT_LIVE_RUN.'             'No live experimental model inference has been performed.'             'The included .pt files are small external analysis-vector artifacts, not language-model weights.'             'The included tokenizer files are tokenizer/chat-template assets only.'             'Verify SHA256SUMS.txt and rerun the episode-free scripts rather than trusting the narrative.'             > referee_bundle/README_FOR_REFEREE.txt
 
           (
             cd referee_bundle
@@ -112,13 +104,13 @@ jobs:
           sha256sum referee_bundle/vector/vectors_step95_bal.pt
           sha256sum referee_bundle/vector/vectors_naive_faithful_pc5000.pt
           sha256sum referee_bundle/tokenizer/tokenizer.json
-          sha256sum referee_bundle/random_direction_freeze.json
+          sha256sum referee_bundle/random_direction_regenerated.json
           sha256sum referee_bundle/REFEREE_PACKET.md
 
       - name: Upload referee bundle
         uses: actions/upload-artifact@v4
         with:
-          name: arpm-v0.7-referee-bundle
+          name: arpm-v0.8-referee-bundle
           if-no-files-found: error
           retention-days: 14
           path: referee_bundle/**
