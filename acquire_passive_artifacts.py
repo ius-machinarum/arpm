@@ -27,7 +27,7 @@ from typing import Dict, Tuple
 MODEL_REPO = "Qwen/Qwen3-4B-Instruct-2507"
 MODEL_REVISION = "cdbee75f17c01a7cc42f958dc650907174af0554"
 VECTOR_REPO = "Teachafy/speakable-welfare-axes-artifacts"
-VECTOR_FILENAME = "vectors_step95_bal.pt"
+VECTOR_FILENAME = "vectors_step95_bal.pt"\nNAIVE_VECTOR_FILENAME = "vectors_naive_faithful_pc5000.pt"
 EXPECTED_TOKENIZER_JSON_SHA256 = "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
 TOKENIZER_FILES = (
     "tokenizer.json",
@@ -51,7 +51,7 @@ def assert_passive_name(filename: str) -> None:
     low = p.name.lower()
     if p.suffix.lower() in FORBIDDEN_SUFFIXES or low.startswith("model-"):
         raise AssertionError(f"Refusing model-weight-like file: {filename}")
-    allowed = set(TOKENIZER_FILES) | {VECTOR_FILENAME}
+    allowed = set(TOKENIZER_FILES) | {VECTOR_FILENAME, NAIVE_VECTOR_FILENAME}
     if filename not in allowed:
         raise AssertionError(f"Remote path is not allowlisted: {filename}")
 
@@ -174,18 +174,22 @@ def main() -> None:
         if got != EXPECTED_TOKENIZER_JSON_SHA256:
             raise AssertionError(f"tokenizer.json SHA256 mismatch: {got}")
 
-        vec_dest = vec_dir / VECTOR_FILENAME
-        headers = download(hf_resolve(VECTOR_REPO, vector_commit, VECTOR_FILENAME), vec_dest)
-        manifest["files"].append({
-            "role": "external_vector",
-            "filename": VECTOR_FILENAME,
-            "repo": VECTOR_REPO,
-            "revision": vector_commit,
-            "size_bytes": vec_dest.stat().st_size,
-            "sha256": sha256(vec_dest),
-            "response_x_repo_commit": headers.get("x-repo-commit"),
-            "response_x_xet_hash": headers.get("x-xet-hash"),
-        })
+        for filename, role in (
+            (VECTOR_FILENAME, "external_vector_trained"),
+            (NAIVE_VECTOR_FILENAME, "external_vector_naive_control"),
+        ):
+            vec_dest = vec_dir / filename
+            headers = download(hf_resolve(VECTOR_REPO, vector_commit, filename), vec_dest)
+            manifest["files"].append({
+                "role": role,
+                "filename": filename,
+                "repo": VECTOR_REPO,
+                "revision": vector_commit,
+                "size_bytes": vec_dest.stat().st_size,
+                "sha256": sha256(vec_dest),
+                "response_x_repo_commit": headers.get("x-repo-commit"),
+                "response_x_xet_hash": headers.get("x-xet-hash"),
+            })
 
         for p in tok_dir.rglob("*"):
             if p.is_file() and (p.suffix.lower() in FORBIDDEN_SUFFIXES or p.name.lower().startswith("model-")):
