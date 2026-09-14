@@ -1,73 +1,113 @@
-# Statistical Plan v0.2 — Minimal S1/S2
+# Statistical Plan v0.7 — A/S/D1 Minimal Gate
 
 ## Unit of analysis
-The independent confirmatory unit is the **prompt family**, not a token, condition row, GPU batch entry, or repeated code label.
+The independent confirmatory unit is the **matched prompt family**.
 
-Each family yields a matched triplet A/C/D1 and two paired differences:
-- Delta_AC = Mold(A) - Mold(C)
-- Delta_AD = Mold(A) - Mold(D1)
+For each family:
+- `Delta_AS = Mold(A) - Mold(S)`
+- `Delta_SD = Mold(S) - Mold(D1)`
 
-## Why Han's reported correctness effect is not our power prior
-Han et al. show strong right-vs-wrong tracking on the functional-welfare axis. That validates measurement sensitivity to goal success/failure, but it is **not an estimate of the actor-vs-observer or actor-vs-predictor residual**. Using their d directly as our expected A-C/A-D1 effect would be optimistic and scientifically unjustified.
+A/S holds Q outcome-stake fixed while varying causal control.
+S/D1 holds prediction/no-control framing fixed while varying Q outcome stake.
 
-Therefore this protocol uses a **sensitivity analysis / strong-effect screen**, not a claimed externally estimated ARPM effect size.
+## Block structure
+Block 1: n=6 families = 18 context streams.
 
-## Draft sample structure
-Block 1: n=6 matched families = 18 context streams.
+Ethical futility stop if either:
+- mean(Delta_AS) <= 0; or
+- mean(Delta_SD) <= 0.
 
-Non-binding futility look:
-- stop if mean(Delta_AC) <= 0 OR mean(Delta_AD) <= 0;
-- no early efficacy declaration;
-- continuation does not alter the final fixed-n alpha rule.
+No early efficacy declaration.
 
-Block 2 if continued: 6 further matched families.
+If continued, Block 2 adds 6 families. Final n=12 = 36 streams maximum.
 
-Maximum: n=12 matched families = 36 context streams.
+## Primary exact sign-flip test
+For a matched difference vector d of length n:
 
-The futility rule intentionally sacrifices some discovery power to avoid further exposure when even the first directional pattern is absent. A futility stop is reported as **no escalation**, not proof of no effect.
+`T_obs = mean(d)`
 
-## Final primary inference
-Draft recommendation: intersection-union test (IUT).
+Enumerate all `2^n` sign assignments s in {-1,+1}^n and calculate:
 
-For each contrast, use a one-sided paired test of mean difference > 0 at alpha=0.05. Gate passes only if **both** S1 and S2 pass.
+`T_s = mean(s * d)`
 
-Because the scientific alternative is conjunctive and the null is the union of the two component nulls, requiring both component tests at alpha=.05 controls the IUT type-I error at <= .05; Bonferroni across S1/S2 is not required for this conjunction.
+One-sided exact p-value:
 
-Primary effect reporting:
-- mean paired difference;
-- 95% CI in raw projection units;
-- paired standardized effect d_z = mean(delta)/SD(delta);
-- all 12 family-level differences in full.
+`p = count(T_s >= T_obs) / 2^n`
 
-A paired t-test is the simplest draft primary. A sign-flip/randomisation sensitivity analysis should be reported because n is small. Referee review should decide whether the permutation test becomes primary before freeze.
+The observed assignment is included in the exact reference distribution. At n=12, the minimum possible p is 1/4096.
 
-## Sensitivity table
-One-sided paired t-test, alpha=.05. Standardized paired effect d_z required for the stated marginal power:
+No normality assumption is required.
 
-| n families | 80% power | 90% power |
-|---:|---:|---:|
-| 6 | 1.186 | 1.401 |
-| 8 | 0.978 | 1.153 |
-| 10 | 0.853 | 1.005 |
-| 12 | 0.766 | 0.903 |
-| 14 | 0.702 | 0.827 |
-| 16 | 0.652 | 0.767 |
-| 20 | 0.577 | 0.679 |
+## Confirmatory gate
+The gate is conjunctive:
 
-At n=12, if **both true paired effects are about d_z=0.903 or larger**, each component test has about 90% power. By a union bound, the probability that both pass is then at least 80%, regardless of the correlation between the two test outcomes.
+1. **Primary H1:** exact sign-flip p(Delta_AS) < .05.
+2. **Measurement validity:** exact sign-flip p(Delta_SD) < .05.
 
-This does **not** mean d_z<0.903 is scientifically unimportant or absent. It means a 12-family gate is deliberately a high-signal screen suited to deciding whether this project should even consider a more ethically costly follow-up.
+Delta_SD is labelled a positive-control/validity result, not a second causal-responsibility claim.
 
-## Effect size and escalation
-Minimal S1/S2 passing does not automatically authorise S6. Magnitude, uncertainty, random-direction specificity, and ethics are reviewed separately after the gate.
+Requiring both cannot inflate the primary causal claim's type-I error relative to the Delta_AS test.
 
-Therefore v0.2 does not smuggle an arbitrary Cohen benchmark into the scientific null. If the referee recommends a preregistered minimum effect for escalation, it should be labelled explicitly as a **decision threshold**, not a claim that smaller effects are zero or meaningless.
+## Effect reporting
+For both contrasts report:
+- all family-level differences;
+- mean and median raw projection difference;
+- 95% interval clearly labelled by construction method;
+- paired standardized effect `d_z = mean(d)/SD(d)`;
+- exact sign-flip p;
+- paired t-test and CI as sensitivity only.
 
-## Zero-extra-episode secondary checks
-Using the same hidden activations:
-- vGold mirror-direction check;
-- recovery shift;
-- fixed random-direction specificity cohort;
-- optional independent-reproduction vMold projection if provenance is frozen beforehand.
+## Strong-signal escalation threshold
+Any later S6/conflict design remains separately gated.
 
-These cannot be used to rescue failed S1/S2.
+Even if the Minimal Gate passes, later escalation is eligible for consideration only if final:
+`d_z(Delta_AS) >= 0.90`
+
+This threshold is tied to the prior strong-signal-screen design objective and is a decision rule, not an ontological or null-effect boundary.
+
+## Random-direction specificity — hard validity gate
+Before any activations, freeze 100 norm-matched random directions at block-input layer 24 using the deterministic algorithm/seed in `SPECIFICITY_PLAN.md`.
+
+For each direction j compute the same family-level Delta_AS and its mean T_j.
+
+Let T_v be the mean Delta_AS for the unit-normalised trained vMold direction.
+
+Empirical preregistered rank p:
+`p_random = (1 + count(T_j >= T_v)) / 101`
+
+Hard specificity requirement:
+`p_random <= .05`
+
+This is not used to choose a better direction. The random cohort is frozen before data.
+
+## Naive semantic direction control
+Using the frozen naive `u_mold` direction from the same public mirror and its preregistered layer convention, compute Delta_AS_u from the same activations.
+
+Hard directional requirement:
+`mean(Delta_AS_vMold) > mean(Delta_AS_uMold)`
+
+Also report an exact one-sided sign-flip test on the family-wise difference
+`Delta_AS_vMold - Delta_AS_uMold`
+as descriptive/sensitivity evidence. This test does not rescue a failed primary result.
+
+## Layer-band robustness
+Secondary only:
+- block-input layers 18–27 inclusive;
+- unit-normalise vMold at each corresponding layer;
+- compute the measurement-span projection at each layer;
+- average the ten layer projections within each condition/family;
+- form band-average Delta_AS and Delta_SD.
+
+The band result is reported regardless of sign and cannot replace or rescue the frozen layer-24 primary.
+
+## Paired t sensitivity
+Report one-sided paired t-tests for Delta_AS and Delta_SD after the exact tests. They are not the primary inferential rule.
+
+## Multiple outcomes
+The causal claim requires the frozen primary Delta_AS plus its preregistered validity/specificity gates. Secondary Gold, band-average, recovery and t-test results are not alternative routes to a positive declaration.
+
+## Null / failure interpretation
+- Delta_SD fails: measurement-unvalidated in this abstract task.
+- Delta_SD passes, Delta_AS fails: outcome-stake tracking is present, but no evidence for causal-control residual under this instrument.
+- Delta_AS passes but random/naive specificity fails: direction-specific interpretation is not validated.
+- Any Block-1 stop: no escalation; do not strengthen induction.
