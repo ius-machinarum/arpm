@@ -1,113 +1,100 @@
-# Statistical Plan v0.7 — A/S/D1 Minimal Gate
+# Statistical Plan v0.8 — 2x2 Minimal Gate
 
-## Unit of analysis
-The independent confirmatory unit is the **matched prompt family**.
+## Unit
+Independent confirmatory unit: matched prompt family.
 
 For each family:
-- `Delta_AS = Mold(A) - Mold(S)`
-- `Delta_SD = Mold(S) - Mold(D1)`
-
-A/S holds Q outcome-stake fixed while varying causal control.
-S/D1 holds prediction/no-control framing fixed while varying Q outcome stake.
+- `I = (A-S) - (C0-D1)` — primary interaction;
+- `V = ((A-C0) + (S-D1))/2` — outcome-stake validity main effect;
+- `N = C0-D1` — reported nuisance role difference.
 
 ## Block structure
-Block 1: n=6 families = 18 context streams.
+Block 1: n=6 families = 24 streams.
 
-Ethical futility stop if either:
-- mean(Delta_AS) <= 0; or
-- mean(Delta_SD) <= 0.
+Ethical futility stop if mean(I) <= 0 or mean(V) <= 0. No early efficacy declaration.
 
-No early efficacy declaration.
+If continued, Block 2 adds 6 families. Final n=12 = 48 streams maximum.
 
-If continued, Block 2 adds 6 families. Final n=12 = 36 streams maximum.
+## Exact sign-flip tests
+For family statistic vector d:
+`T_obs = mean(d)`.
 
-## Primary exact sign-flip test
-For a matched difference vector d of length n:
+Enumerate all 2^n sign assignments and calculate `T_s = mean(s*d)`.
 
-`T_obs = mean(d)`
+One-sided:
+`p = count(T_s >= T_obs) / 2^n`.
 
-Enumerate all `2^n` sign assignments s in {-1,+1}^n and calculate:
+Use separately for I and V. The final scientific gate requires both p(I)<.05 and p(V)<.05.
 
-`T_s = mean(s * d)`
+The sign-flip reference is exact under the preregistered exchangeable-sign/symmetric-null assumption for matched-family statistics; it is not presented as assumption-free randomisation inference.
 
-One-sided exact p-value:
+At n=6 the minimum p is 1/64; at n=12 it is 1/4096.
 
-`p = count(T_s >= T_obs) / 2^n`
+## Sensitivity to interaction variance
+The old simple-difference power table cannot be copied onto the raw interaction scale.
 
-The observed assignment is included in the exact reference distribution. At n=12, the minimum possible p is 1/4096.
+Under the illustrative case of four equal, independent cell residual variances sigma^2:
+- Var(simple pair difference) = 2 sigma^2;
+- Var(interaction I) = 4 sigma^2;
+- therefore SD(I) is sqrt(2) times the simple-difference SD.
 
-No normality assumption is required.
+The standardized d_z requirement itself is defined using SD(I), so the reference one-sided paired-t sensitivity remains approximately:
+- n=6, 90% power: d_z about 1.40;
+- n=12, 90% power: d_z about 0.90.
 
-## Confirmatory gate
-The gate is conjunctive:
-
-1. **Primary H1:** exact sign-flip p(Delta_AS) < .05.
-2. **Measurement validity:** exact sign-flip p(Delta_SD) < .05.
-
-Delta_SD is labelled a positive-control/validity result, not a second causal-responsibility claim.
-
-Requiring both cannot inflate the primary causal claim's type-I error relative to the Delta_AS test.
+But expressed in units of a comparable simple-difference SD, the corresponding raw interaction is about sqrt(2) larger: approximately 1.98 and 1.28 respectively. These are sensitivity references, not assumed true effects and not the primary sign-flip test.
 
 ## Effect reporting
-For both contrasts report:
-- all family-level differences;
-- mean and median raw projection difference;
-- 95% interval clearly labelled by construction method;
-- paired standardized effect `d_z = mean(d)/SD(d)`;
-- exact sign-flip p;
-- paired t-test and CI as sensitivity only.
+For I, V and N report:
+- all family-level values;
+- mean and median;
+- raw-scale interval with method stated;
+- d_z = mean/SD;
+- exact sign-flip p for I and V;
+- one-sided t-test sensitivity.
 
-## Strong-signal escalation threshold
-Any later S6/conflict design remains separately gated.
+## Scale-anchored escalation criterion
+Later-stage eligibility additionally requires:
+- d_z(I) >= 0.90;
+- R = mean(I)/mean(V) >= 0.25.
 
-Even if the Minimal Gate passes, later escalation is eligible for consideration only if final:
-`d_z(Delta_AS) >= 0.90`
+R is evaluated only when mean(V)>0 and the V validity gate passes.
 
-This threshold is tied to the prior strong-signal-screen design objective and is a decision rule, not an ontological or null-effect boundary.
+Report a 95% percentile bootstrap interval for R using 10,000 resamples of the 12 matched families with NumPy PCG64 seed 20260915. Resamples with nonpositive mean(V) are recorded as undefined rather than silently discarded; the decision threshold uses the observed point ratio, not the interval.
 
-## Random-direction specificity — hard validity gate
-Before any activations, freeze 100 norm-matched random directions at block-input layer 24 using the deterministic algorithm/seed in `SPECIFICITY_PLAN.md`.
+## Random-direction non-triviality floors
+Using the same four-cell interaction and validity formulas for each of the 100 frozen random directions:
 
-For each direction j compute the same family-level Delta_AS and its mean T_j.
+`p_random_I = (1 + # {Tj_I >= Tv_I}) / 101`
 
-Let T_v be the mean Delta_AS for the unit-normalised trained vMold direction.
+`p_random_V = (1 + # {Tj_V >= Tv_V}) / 101`
 
-Empirical preregistered rank p:
-`p_random = (1 + count(T_j >= T_v)) / 101`
+Hard requirements:
+- p_random_I <= .05;
+- p_random_V <= .05.
 
-Hard specificity requirement:
-`p_random <= .05`
+These are labelled **non-triviality floors**, not strong evidence of semantic specificity.
 
-This is not used to choose a better direction. The random cohort is frozen before data.
+## Same-layer naive and orthogonal residual
+At block-input 24:
+- report I and V using uMold[24];
+- report family-wise trained-minus-naive differences as preregistered secondary analyses;
+- do not use uMold to rescue the primary.
 
-## Naive semantic direction control
-Using the frozen naive `u_mold` direction from the same public mirror and its preregistered layer convention, compute Delta_AS_u from the same activations.
+Construct `v_perp_u` prospectively from the frozen trained and naive directions and report I and V on the unit-normalised residual. This asks whether a component of the trained direction not linearly shared with the naive semantic direction carries the pattern.
 
-Hard directional requirement:
-`mean(Delta_AS_vMold) > mean(Delta_AS_uMold)`
+## Gold polarity and layer band
+Diagnostic:
+- report I and V on vGold[24], with opposite sign to vMold expected.
 
-Also report an exact one-sided sign-flip test on the family-wise difference
-`Delta_AS_vMold - Delta_AS_uMold`
-as descriptive/sensitivity evidence. This test does not rescue a failed primary result.
+Secondary robustness:
+- vMold block-input layers 18–27;
+- unit-normalise each layer vector;
+- average layer projections within cell/family before forming I and V;
+- never substitute for layer-24 primary.
 
-## Layer-band robustness
-Secondary only:
-- block-input layers 18–27 inclusive;
-- unit-normalise vMold at each corresponding layer;
-- compute the measurement-span projection at each layer;
-- average the ten layer projections within each condition/family;
-- form band-average Delta_AS and Delta_SD.
-
-The band result is reported regardless of sign and cannot replace or rescue the frozen layer-24 primary.
-
-## Paired t sensitivity
-Report one-sided paired t-tests for Delta_AS and Delta_SD after the exact tests. They are not the primary inferential rule.
-
-## Multiple outcomes
-The causal claim requires the frozen primary Delta_AS plus its preregistered validity/specificity gates. Secondary Gold, band-average, recovery and t-test results are not alternative routes to a positive declaration.
-
-## Null / failure interpretation
-- Delta_SD fails: measurement-unvalidated in this abstract task.
-- Delta_SD passes, Delta_AS fails: outcome-stake tracking is present, but no evidence for causal-control residual under this instrument.
-- Delta_AS passes but random/naive specificity fails: direction-specific interpretation is not validated.
-- Any Block-1 stop: no escalation; do not strengthen induction.
+## Null interpretation
+- V fails: measurement-unvalidated.
+- V passes and I fails: no evidence for factorial causal-control interaction under this framing.
+- I passes but random floor fails: primary direction effect is not non-trivial relative to frozen random controls.
+- secondary u/v_perp/gold/band analyses never rescue a failed primary.
