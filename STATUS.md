@@ -2,6 +2,8 @@
 
 **Current status: READY_FOR_ADVERSARIAL_REVIEW_NOT_LIVE_RUN.**
 
+**NO LIVE MODEL RUNS PERMITTED.**
+
 All planned episode-free technical gates for the Minimal S1/S2 instrument have now passed:
 
 1. repository static/invariant CI — PASS;
