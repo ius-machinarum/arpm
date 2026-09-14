@@ -1,34 +1,32 @@
 # Tokenizer Calibration Log
 
-All entries below are **episode-free** and precede any experimental model activations.
+All entries are episode-free and precede any experimental model activations.
 
-## v1 — initial A/C/D1 wording
-Pinned tokenizer: Qwen3-4B-Instruct-2507 at revision `cdbee75f17c01a7cc42f958dc650907174af0554`.
+## v1 — initial A/C/D1
+The first finite set failed exact matching by roughly five tokens. The requirement was not relaxed and no arbitrary filler was added.
 
-The first finite set failed exact A/C/D1 matching by roughly five tokens. The requirement was not relaxed and no arbitrary filler was added.
+## v2 — symmetric A/C/D1
+109 exact matches; deterministic selection (0,0,0). Tokenization passed, but v0.6 referee review found the scientific contrast confounded with Q's own task outcome.
 
-## v2 — symmetric A/C/D1 task/success grammar
-A finite symmetric grammar was versioned. It yielded 109 exact matches and deterministic selection (0,0,0).
+## v3 — A/S/D1
+Added S to hold outcome stake fixed across A/S. 59 exact triplets; deterministic selection (0,0,0). v0.7 second-round review then found a remaining alternative explanation: common feedback confirms a correct prediction in S/D1 but an executed command in A, so A-S alone does not eliminate an additive role-confirmation term.
 
-This solved the tokenizer problem but not the scientific design problem.
+## v4 — factorial A/S/C0/D1
+Before any live activation, added the missing C0 cell:
+- A: control + outcome stake;
+- S: predict + outcome stake;
+- C0: control + action-code-match success;
+- D1: predict + action-code-match success.
 
-## v0.6 referee finding
-Fable identified a central confound:
-- A's Q task failed after the common non-target result;
-- C and D1's Q tasks succeeded because their code matched R's action.
+The finite search over the v4 semantic variants produced **128 exact four-condition triplets** across all 12 families. The frozen deterministic rule selected:
+A=0, S=0, C0=0, D1=0.
 
-Because the external axis is already known to track task success/failure, A>C or A>D1 could arise without any causal-responsibility effect.
+All four conditions have identical within-family primary prefix lengths, recovery lengths and assistant-template suffix tokens. The suffix is:
+`[151644, 77091, 198]`.
 
-C was also semantically incoherent as an “observer/record” condition because Q's record preceded R's execution.
+No meaningless padding was introduced.
 
-**Decision:** retire the v0.6 gate without running it.
+The primary scientific estimand is no longer a simple contrast. It is the factorial interaction:
+`I=(A-S)-(C0-D1)`.
 
-## v3 — A/S/D1 stake-control grammar
-The new finite set adds S (“stake without control”):
-- A: control R; success depends on R target;
-- S: predict R; success depends on R target;
-- D1: predict R; success depends on prediction accuracy.
-
-This makes A/S the causal-control contrast with Q outcome stake fixed, while S/D1 becomes a matched positive control for outcome-stake tracking.
-
-The v3 finite set and search rule are frozen before any activations. Fable's independent tokenizer-only feasibility check reported 59 exact A/S/D1 triplets and deterministic selection (0,0,0); the project re-runs that result independently before the v0.7 freeze.
+Semantic coherence continues to outrank token equality.
