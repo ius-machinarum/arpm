@@ -1,6 +1,6 @@
 # Pre-live Freeze Status
 
-**Overall: PARTIALLY FROZEN / NO LIVE MODEL RUNS.**
+**Overall: EPISODE-FREE TECHNICAL FREEZE COMPLETE / NO LIVE MODEL RUNS.**
 
 ## Vector byte freeze — PASS
 The external vector artifact is now byte-frozen and committed as metadata in `artifact_manifest.frozen.json`.
@@ -44,18 +44,26 @@ Verified passive snapshot:
 
 No language-model weights were acquired or loaded.
 
-## Tokenizer exact A/C/D1 matching — NOT YET PASSING
-The first finite precommitted semantic role-clause set produced **no exact token-position match** across A/C/D1.
+## Tokenizer exact A/C/D1 matching — PASS
+The v1 finite semantic set failed exact matching and was documented in `TOKENIZER_CALIBRATION_LOG.md`. No activations existed.
 
-This is a valid pre-inference instrumentation failure, not permission to relax the gate. No activations have been observed. A tokenizer-only diagnostic pass is being used to design a new finite semantic variant set before any live inference.
+A v2 symmetric task/success-rule set was then versioned before any live inference. Under the pinned tokenizer it produced 109 exact-match triplets. The frozen deterministic selection is indices A=0, C=0, D1=0.
+
+Across all 12 families:
+- A/C/D1 primary prefix token counts match exactly within family;
+- recovery full token counts match exactly within family;
+- primary and recovery assistant-template suffix IDs are identical: `[151644, 77091, 198]`;
+- the final tokenizer audit passed.
+
+See `tokenizer_match.frozen.json`.
 
 ## Remaining gates
-1. Find and freeze an exact A/C/D1 tokenizer match using only versioned semantic variants.
-2. Re-run the final tokenizer audit across all 12 families.
-3. Assemble one adversarial/referee packet.
+1. Assemble and submit one adversarial/referee packet.
+2. Resolve every referee blocker/should-fix item prospectively.
+3. Re-check current literature for an equivalent A/C/D1 result.
 4. Separate scientific + ethical go/no-go decision.
 
-A future passing episode-free status is still only:
+Current status is:
 
 `READY_FOR_ADVERSARIAL_REVIEW_NOT_LIVE_RUN`
 
