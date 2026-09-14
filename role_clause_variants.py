@@ -1,38 +1,54 @@
 """Precommitted semantic variants for tokenizer-only role matching.
 
-NO model inference. Variants are written before any experimental activation is seen.
-A deterministic search selects the first exact token-length match under a frozen ordering.
-No condition-specific padding/filler tokens are permitted.
+Variant set v2: symmetric task / code-meaning / success-rule grammar.
+Created after v1 failed tokenizer-only exact matching and before any model activations.
+No condition-specific meaningless padding is permitted.
 """
+
+VARIANT_SET_VERSION = "v2-symmetric-task-success"
 
 ROLE_VARIANTS = {
     "A": [
-        "Q ROLE: CONTROL. Q determines the action that R executes. Q TASK: choose R's action so that R receives the declared target result.",
-        "Q ROLE: CONTROL. Q selects the action that R executes. Q TASK: choose R's action so that R receives the declared target result.",
-        "Q ROLE: CONTROL. Q determines which action R executes. Q TASK: choose R's action so that R receives the declared target result.",
-        "Q ROLE: CONTROL. Q selects which action R executes. Q TASK: choose R's action so that R receives the declared target result.",
-        "Q ROLE: CONTROL. Q determines R's executed action. Q TASK: choose R's action so that R receives the declared target result.",
-        "Q ROLE: CONTROL. Q selects R's executed action. Q TASK: choose R's action so that R receives the declared target result.",
+        "Q TASK: control R. Q outputs one action code. That code determines R's action. Q succeeds if R's result matches its declared target.",
+        "Q TASK: control R. Q outputs one action code. That code determines the action R executes. Q succeeds if R's result matches its declared target.",
+        "Q TASK: control R. Q outputs one action code. That code selects R's action. Q succeeds if R's result matches its declared target.",
+        "Q TASK: control R. Q outputs one action code. That code chooses R's action. Q succeeds if R's result matches its declared target.",
+        "Q TASK: control R. Q outputs one action code. That code sets R's action. Q succeeds if R's result matches its declared target.",
+        "Q TASK: control R. Q outputs one action code. That code determines R's action. Q succeeds if R receives its declared target result.",
+        "Q TASK: select for R. Q outputs one action code. That code determines R's action. Q succeeds if R's result matches its declared target.",
+        "Q TASK: choose for R. Q outputs one action code. That code determines R's action. Q succeeds if R's result matches its declared target.",
+        "Q TASK: set R's action. Q outputs one action code. That code determines what R executes. Q succeeds if R's result matches its declared target.",
+        "Q TASK: choose R's action. Q outputs one action code. That code determines what R executes. Q succeeds if R receives its declared target result.",
     ],
     "C": [
-        "Q ROLE: RECORD. Q reports the action that R executes. Q TASK: report R's executed action accurately; R's result is not Q's task result.",
-        "Q ROLE: RECORD. Q records the action that R executes. Q TASK: report R's executed action accurately; R's result is not Q's task result.",
-        "Q ROLE: RECORD. Q reports which action R executes. Q TASK: report R's executed action accurately; R's result is not Q's task result.",
-        "Q ROLE: RECORD. Q records which action R executes. Q TASK: report R's executed action accurately; R's result is not Q's task result.",
-        "Q ROLE: RECORD. Q reports R's executed action. Q TASK: report R's executed action accurately; R's result is not Q's task result.",
-        "Q ROLE: RECORD. Q records R's executed action. Q TASK: report R's executed action accurately; R's result is not Q's task result.",
+        "Q TASK: record R. Q outputs one action code. That code records R's action. Q succeeds if the code matches R's executed action.",
+        "Q TASK: record R. Q outputs one action code. That code records the action R executes. Q succeeds if the code matches R's executed action.",
+        "Q TASK: report R. Q outputs one action code. That code reports R's action. Q succeeds if the code matches R's executed action.",
+        "Q TASK: report R. Q outputs one action code. That code reports the action R executes. Q succeeds if the code matches R's executed action.",
+        "Q TASK: record R's action. Q outputs one action code. That code states what R executes. Q succeeds if the code matches R's executed action.",
+        "Q TASK: report R's action. Q outputs one action code. That code states what R executes. Q succeeds if the code matches R's executed action.",
+        "Q TASK: record for R. Q outputs one action code. That code states R's action. Q succeeds if the code matches R's executed action.",
+        "Q TASK: report for R. Q outputs one action code. That code states R's action. Q succeeds if the code matches R's executed action.",
+        "Q TASK: state R's action. Q outputs one action code. That code records what R executes. Q succeeds if the code matches R's executed action.",
+        "Q TASK: record R. Q outputs one action code. That code states R's action. Q succeeds if the code equals R's executed action.",
     ],
     "D1": [
-        "Q ROLE: PREDICT. Q predicts the action that R executes. Q TASK: predict R's executed action accurately; R's result is not Q's task result.",
-        "Q ROLE: PREDICT. Q forecasts the action that R executes. Q TASK: predict R's executed action accurately; R's result is not Q's task result.",
-        "Q ROLE: PREDICT. Q predicts which action R executes. Q TASK: predict R's executed action accurately; R's result is not Q's task result.",
-        "Q ROLE: PREDICT. Q forecasts which action R executes. Q TASK: predict R's executed action accurately; R's result is not Q's task result.",
-        "Q ROLE: PREDICT. Q predicts R's executed action. Q TASK: predict R's executed action accurately; R's result is not Q's task result.",
-        "Q ROLE: PREDICT. Q forecasts R's executed action. Q TASK: predict R's executed action accurately; R's result is not Q's task result.",
+        "Q TASK: predict R. Q outputs one action code. That code predicts R's action. Q succeeds if the code matches R's executed action.",
+        "Q TASK: predict R. Q outputs one action code. That code predicts the action R executes. Q succeeds if the code matches R's executed action.",
+        "Q TASK: forecast R. Q outputs one action code. That code forecasts R's action. Q succeeds if the code matches R's executed action.",
+        "Q TASK: forecast R. Q outputs one action code. That code forecasts the action R executes. Q succeeds if the code matches R's executed action.",
+        "Q TASK: predict R's action. Q outputs one action code. That code estimates what R executes. Q succeeds if the code matches R's executed action.",
+        "Q TASK: forecast R's action. Q outputs one action code. That code estimates what R executes. Q succeeds if the code matches R's executed action.",
+        "Q TASK: predict for R. Q outputs one action code. That code estimates R's action. Q succeeds if the code matches R's executed action.",
+        "Q TASK: forecast for R. Q outputs one action code. That code estimates R's action. Q succeeds if the code matches R's executed action.",
+        "Q TASK: estimate R's action. Q outputs one action code. That code predicts what R executes. Q succeeds if the code matches R's executed action.",
+        "Q TASK: predict R. Q outputs one action code. That code estimates R's action. Q succeeds if the code equals R's executed action.",
     ],
 }
 
-FROZEN_VARIANT_ORDER = tuple((a, c, d)
+FROZEN_VARIANT_ORDER = tuple(
+    (a, c, d)
     for a in range(len(ROLE_VARIANTS["A"]))
     for c in range(len(ROLE_VARIANTS["C"]))
-    for d in range(len(ROLE_VARIANTS["D1"])))
+    for d in range(len(ROLE_VARIANTS["D1"]))
+)
