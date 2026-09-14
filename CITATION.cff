@@ -1,0 +1,8 @@
+cff-version: 1.2.0
+message: "If you use this research repository, please cite it by its repository name and version."
+title: "ARPM — Agent-Relative Processing-Level Modulation"
+type: software
+authors:
+  - name: "Ius Machinarum"
+repository-code: "https://github.com/ius-machinarum/arpm"
+abstract: "A precautionary research protocol for testing agent-relative processing-level modulation in language models without presupposing consciousness, welfare, sentience, moral status, or rights."
