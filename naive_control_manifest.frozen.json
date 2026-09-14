@@ -1,0 +1,31 @@
+{
+  "status": "BYTE_FROZEN_NAIVE_CONTROL_PASS",
+  "freeze_version": "v0.8",
+  "artifact": {
+    "filename": "vectors_naive_faithful_pc5000.pt",
+    "size_bytes": 739541,
+    "sha256": "68bff1428712def0330851057dba102112e3d48ffa23db7da85d84cde93aaa0e",
+    "repo": "Teachafy/speakable-welfare-axes-artifacts",
+    "revision": "8f4df5b5b14ecb4bcc5b20209bdfe2574d1ebee8",
+    "safe_load": "weights_only=True"
+  },
+  "mapping": {
+    "semantic_name": "u_mold",
+    "artifact_key": "v_mold",
+    "tensor_shape": [36, 2560],
+    "dtype": "torch.float32",
+    "artifact_metadata_mold_layer": 21,
+    "analysis_block_input_layer": 24,
+    "analysis_layer_norm": 8.00526237487793,
+    "published_layer24_norm_reference": 8.01
+  },
+  "metadata": {
+    "layer_gold": 21,
+    "per_class": 5000,
+    "balanced": true,
+    "note": "faithful: revisit-walk + ref-emoji + noshuffle, 0.50 density"
+  },
+  "role": "secondary_same_layer_semantic_control_not_hard_gate",
+  "episode_count": 0,
+  "model_weights_loaded": false
+}
