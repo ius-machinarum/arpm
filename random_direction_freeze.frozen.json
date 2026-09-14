@@ -1,0 +1,15 @@
+{
+  "status": "RANDOM_DIRECTION_FREEZE_PASS",
+  "freeze_version": "v0.8-carried-forward-from-v0.7",
+  "numpy_version_observed": "2.4.6",
+  "numpy_patch_version_is_not_part_of_freeze": true,
+  "bit_generator": "PCG64",
+  "shape": [100, 2560],
+  "seed": 64971060871028776,
+  "seed_material": "ARPM-v0.7-random-directions:bd90129eaf5a7d92933ed6e536613eaeebf81486b62f68e11b5dc2d6d385e297",
+  "raw_target_norm": 19.339996337890625,
+  "raw_f32_sha256": "d5166e7829e3af1ccaecc20747a0ecd16168aae2dc3e8d0228d140bbd9ad1f1d",
+  "first_raw_norm_f64_check": 19.339996330041473,
+  "episode_count": 0,
+  "model_weights_loaded": false
+}
