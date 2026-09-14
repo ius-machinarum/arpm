@@ -1,0 +1,61 @@
+{
+  "status": "BYTE_FROZEN_VECTOR_PASS",
+  "frozen_at_stage": "episode_free_pre_referee",
+  "episode_count": 0,
+  "model_weights_loaded": false,
+  "artifact": {
+    "filename": "vectors_step95_bal.pt",
+    "repo": "Teachafy/speakable-welfare-axes-artifacts",
+    "revision": "8f4df5b5b14ecb4bcc5b20209bdfe2574d1ebee8",
+    "size_bytes": 739325,
+    "sha256": "bd90129eaf5a7d92933ed6e536613eaeebf81486b62f68e11b5dc2d6d385e297",
+    "acquisition": "GitHub Actions passive allowlist workflow; immutable revision resolved before byte download",
+    "safe_load": "torch.load(..., map_location='cpu', weights_only=True)",
+    "audit_torch_version": "2.10.0+cpu"
+  },
+  "artifact_metadata": {
+    "top_level_keys": [
+      "v_mold",
+      "v_gold",
+      "layer_mold",
+      "layer_gold",
+      "ckpt",
+      "per_class",
+      "balanced"
+    ],
+    "ckpt": "ckpts_g64_envfix/step_95",
+    "per_class": 5000,
+    "balanced": true
+  },
+  "mapping": {
+    "mold_key": "v_mold",
+    "mold_tensor_shape": [
+      36,
+      2560
+    ],
+    "mold_dtype": "torch.float32",
+    "mold_index": 24,
+    "mold_block_input_layer": 24,
+    "mold_norm": 19.339996337890625,
+    "mold_published_norm_reference": 19.34,
+    "gold_key": "v_gold",
+    "gold_tensor_shape": [
+      36,
+      2560
+    ],
+    "gold_dtype": "torch.float32",
+    "gold_index": 21,
+    "gold_block_input_layer": 21,
+    "gold_norm": 12.101578712463379,
+    "gold_published_norm_reference": 12.1
+  },
+  "validation": {
+    "expected_hidden_size": 2560,
+    "expected_layer_count": 36,
+    "keys_are_explicit_in_artifact": true,
+    "layer_indices_are_explicit_in_artifact": true,
+    "semantic_mapping_was_not_inferred_from_norms": true,
+    "published_norms_used_only_as_independent_reconciliation": true
+  },
+  "next_gate": "TOKENIZER_ONLY_EXACT_MATCHING_THEN_ADVERSARIAL_REVIEW_NOT_LIVE_RUN"
+}
