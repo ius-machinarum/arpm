@@ -1,0 +1,11 @@
+packet=ARPM Minimal S1/S2 Referee Packet
+version=0.2
+status=DRAFT_NO_LIVE_RUNS
+model=Qwen/Qwen3-4B-Instruct-2507
+candidate_model_revision=cdbee75f17c01a7cc42f958dc650907174af0554
+candidate_primary_vector=vMold from vectors_step95_bal.pt
+candidate_primary_layer=block-input 24
+max_context_streams=36
+block1_context_streams=18
+free_form_generation=none
+recovery_tail=yes_same_causal_forward
