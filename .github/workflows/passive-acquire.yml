@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - ".github/workflows/passive-acquire.yml"
+      - "acquire_passive_artifacts.py"
   workflow_dispatch:
 
 permissions:
