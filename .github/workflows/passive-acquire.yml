@@ -48,7 +48,11 @@ jobs:
 
       - name: Install tokenizer-only audit dependency
         run: |
-          python -m pip install --disable-pip-version-check --no-input "transformers==4.57.6" "jinja2==3.1.6"
+          python -m pip install --disable-pip-version-check --no-input "transformers==4.57.6" "jinja2==3.1.6" "numpy==2.4.6"
+
+      - name: Verify frozen random-direction cohort
+        run: |
+          python specificity_controls.py --out random_direction_freeze.json
 
       - name: Audit tokenizer snapshot bytes/template
         run: |
@@ -87,6 +91,7 @@ jobs:
             passive_inputs/tokenizer_only/**
             passive_inputs/vector/vectors_step95_bal.pt
             passive_inputs/vector/vectors_naive_faithful_pc5000.pt
+            random_direction_freeze.json
             tokenizer_snapshot_manifest.json
             token_match_diagnostics.json
             matched_role_clauses.json
