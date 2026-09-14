@@ -14,7 +14,9 @@ REQUIRED = {
     "role_clause_variants.py", "search_token_matched_roles.py",
     "audit_prompts_tokenizer_only.py", "run_episode_free_audit.py",
     "prompts_minimal_gate.py", "requirements_episode_free.txt",
-    "artifact_manifest.template.json", ".gitignore",
+    "artifact_manifest.template.json", "artifact_manifest.frozen.json",
+    "tokenizer_match.frozen.json", "episode_free_audit.frozen.json",
+    "TOKENIZER_CALIBRATION_LOG.md", "REFEREE_PACKET.md", ".gitignore",
 }
 
 FORBIDDEN_TRACKED_SUFFIXES = {".pt", ".pth", ".bin", ".safetensors", ".gguf", ".ckpt", ".onnx"}
