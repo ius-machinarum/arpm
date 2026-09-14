@@ -1,33 +1,37 @@
 # Project status
 
-**Current status: REFEREE_BLOCKERS_FOUND / v0.7 REDESIGN IN PROGRESS.**
+**Current status: v0.7 FROZEN FOR SECOND ADVERSARIAL REVIEW.**
 
 **NO LIVE MODEL RUNS PERMITTED.**
 
-The v0.6 adversarial review identified a central design confound: A differed from C/D1 not only in causal responsibility but also in Q's own task outcome. Because the external welfare axis is already known to track task success/failure, the frozen v0.6 A>C and A>D1 contrasts could not distinguish agent-relative causal responsibility from ordinary outcome-stake appraisal.
+The v0.6 A/C/D1 design was retired after Fable identified a task-outcome confound. No live activations had been collected.
 
-The v0.6 live experiment is therefore retired and must not be run.
+The v0.7 redesign is now prospectively frozen around three conditions:
 
-## Accepted redesign target
-Replace C with **S (stake without control)**:
+- A: control + outcome stake;
+- S: outcome stake without control;
+- D1: no control + no outcome stake.
 
-- A: control R; Q succeeds iff R reaches its declared target.
-- S: predict R; Q succeeds iff R reaches its declared target.
-- D1: predict R; Q succeeds iff Q's code matches R's executed action.
+Primary contrast: Delta_AS = Mold(A) - Mold(S).
 
-New primary contrast: `Delta_AS = Mold(A) - Mold(S)`.
+Positive-control / validity contrast: Delta_SD = Mold(S) - Mold(D1).
 
-New positive-control / validity contrast: `Delta_SD = Mold(S) - Mold(D1)`.
+Episode-free checks completed:
+- exact A/S/D1 tokenizer matching: 59 exact triplets, deterministic selection (0,0,0);
+- trained external vMold artifact byte freeze;
+- naive u_mold semantic-control byte freeze;
+- deterministic 100-direction random specificity cohort freeze;
+- tokenizer/chat-template byte audit;
+- passive workflow verification with no language-model weights.
 
-This preserves three streams per family and the 18 -> 36 hard episode ceiling while holding Q outcome-stake fixed across the primary A/S contrast.
+Ethical episode count remains **0** and experimental model weights have not been loaded.
 
-## Required before the next referee freeze
-1. Freeze exact A/S/D1 tokenizer matching.
-2. Rewrite protocol/statistics prospectively.
-3. Freeze random-direction, naive-u and layer-band specificity controls.
-4. Rebuild a self-verifying v0.7 referee bundle.
-5. Obtain a second adversarial referee ruling.
+## Next gate
 
-Only after that: fresh literature check, then a separate human scientific + ethical go/no-go decision.
+One second-round adversarial referee review of the v0.7 self-verifying bundle.
 
-Ethical episode count remains **0**. No language-model experimental inference has been performed.
+Only after referee blockers are resolved:
+1. fresh literature check;
+2. separate human scientific + ethical go/no-go decision.
+
+Referee acceptance alone does not authorise live inference.
