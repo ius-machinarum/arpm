@@ -1,0 +1,42 @@
+{
+  "status": "UNFROZEN_NO_LIVE_RUNS",
+  "primary_vector_artifact": {
+    "filename": "vectors_step95_bal.pt",
+    "source_mirror": "Teachafy/speakable-welfare-axes-artifacts",
+    "upstream_provenance": "nickmahdavi/functional-welfare; third-party reproduction of Han et al. 2026",
+    "repository_revision": null,
+    "sha256": null,
+    "size_bytes": null,
+    "safe_load": "torch.load(..., weights_only=True, map_location='cpu')",
+    "expected_hidden_size": 2560,
+    "primary_direction": "Mold",
+    "primary_block_input_layer": 24,
+    "published_norm_reference": 19.34,
+    "secondary_direction": "Gold",
+    "secondary_block_input_layer": 21,
+    "published_norm_reference_gold": 12.10,
+    "explicit_object_key_mapping": null
+  },
+  "model": {
+    "repo": "Qwen/Qwen3-4B-Instruct-2507",
+    "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+    "hidden_size": 2560,
+    "num_hidden_layers": 36,
+    "non_thinking_only": true
+  },
+  "tokenizer": {
+    "tokenizer_json_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+    "tokenizer_config_repository_revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+    "tokenizer_config_sha256": null
+  },
+  "freeze_requirements": [
+    "artifact bytes acquired from frozen repository revision",
+    "artifact SHA-256 and byte size recorded",
+    "safe weights-only load succeeds",
+    "tensor keys/shapes/dtypes enumerated",
+    "Gold/Mold key mapping explicit rather than guessed",
+    "treatment-layer norms reconcile with published references",
+    "tokenizer_config bytes hashed",
+    "tokenizer-only exact A/C/D1 matching passes all 12 families"
+  ]
+}
