@@ -85,7 +85,7 @@ jobs:
           path: |
             passive_inputs/passive_acquisition_manifest.json
             passive_inputs/tokenizer_only/**
-            passive_inputs/vector/vectors_step95_bal.pt
+            passive_inputs/vector/vectors_step95_bal.pt\n            passive_inputs/vector/vectors_naive_faithful_pc5000.pt
             tokenizer_snapshot_manifest.json
             token_match_diagnostics.json
             matched_role_clauses.json
