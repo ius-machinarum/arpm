@@ -15,6 +15,5 @@ artifacts/
 tokenizer_snapshot/
 episode_free_audit.json
 matched_role_clauses.json
-artifact_manifest.frozen.json
 .DS_Store
 Thumbs.db
