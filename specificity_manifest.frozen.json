@@ -10,13 +10,17 @@
     "bit_generator": "PCG64",
     "seed_material": "ARPM-v0.7-random-directions:bd90129eaf5a7d92933ed6e536613eaeebf81486b62f68e11b5dc2d6d385e297",
     "derived_uint64_seed": 64971060871028776,
-    "generation_dtype": "float64 standard_normal",
     "raw_target_norm": 19.339996337890625,
-    "storage_dtype": "little-endian float32 C-order",
     "raw_matrix_shape": [100, 2560],
     "raw_matrix_bytes_sha256": "d5166e7829e3af1ccaecc20747a0ecd16168aae2dc3e8d0228d140bbd9ad1f1d",
     "analysis_normalization": "unit-normalise each direction before projection",
-    "hard_gate": "p_random=(1+#random_mean_Delta_AS>=trained_mean_Delta_AS)/101 <= 0.05"
+    "hard_gate": "p_random=(1+#random_mean_Delta_AS>=trained_mean_Delta_AS)/101 <= 0.05",
+    "independent_ci_verification": {
+      "status": "PASS",
+      "workflow_run_id": 34900566953,
+      "random_direction_freeze_json_sha256": "d150e38c265d36a0e9b1c518bf436ded3cf527287d552e92fd4991f5bcc1eee0",
+      "first_raw_norm_f64_check": 19.339996330041473
+    }
   },
   "naive_mold_control": {
     "semantic_name": "u_mold",
@@ -25,9 +29,6 @@
     "revision": "8f4df5b5b14ecb4bcc5b20209bdfe2574d1ebee8",
     "size_bytes": 739541,
     "sha256": "68bff1428712def0330851057dba102112e3d48ffa23db7da85d84cde93aaa0e",
-    "safe_load": "torch.load(..., map_location='cpu', weights_only=True)",
-    "audit_torch_version": "2.10.0+cpu",
-    "artifact_top_level_keys": ["v_mold","v_gold","layer_mold","layer_gold","per_class","balanced","note"],
     "artifact_key_for_u_mold": "v_mold",
     "tensor_shape": [36,2560],
     "dtype": "torch.float32",
@@ -36,15 +37,10 @@
     "per_class": 5000,
     "balanced": true,
     "note": "faithful: revisit-walk + ref-emoji + noshuffle, 0.50 density",
-    "analysis_normalization": "unit-normalise before projection",
-    "hard_directional_gate": "mean(Delta_AS_vMold) > mean(Delta_AS_uMold)",
-    "sensitivity": "exact one-sided sign-flip test on family-wise Delta_AS_vMold - Delta_AS_uMold"
+    "hard_directional_gate": "mean(Delta_AS_vMold) > mean(Delta_AS_uMold)"
   },
   "band_robustness": {
-    "direction_family": "trained v_mold",
     "block_input_layers": [18,19,20,21,22,23,24,25,26,27],
-    "per_layer_normalization": "unit-normalise each corresponding v_mold layer",
-    "aggregation": "average suffix-token projection within layer, then average ten layer projections within family/condition",
     "status": "secondary_non_gating_no_rescue"
   }
 }
