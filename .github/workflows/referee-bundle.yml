@@ -70,14 +70,14 @@ jobs:
           cp passive_inputs/tokenizer_only/tokenizer.json passive_inputs/tokenizer_only/tokenizer_config.json passive_inputs/tokenizer_only/vocab.json passive_inputs/tokenizer_only/merges.txt referee_bundle/tokenizer/
           cp passive_inputs/vector/vectors_step95_bal.pt referee_bundle/vector/
           cp passive_inputs/passive_acquisition_manifest.json referee_bundle/
-          cat > referee_bundle/README_FOR_REFEREE.txt <<'TXT'
-ARPM Minimal S1/S2 adversarial referee bundle.
-Status: READY_FOR_ADVERSARIAL_REVIEW_NOT_LIVE_RUN.
-No live experimental model inference has been performed.
-The included .pt file is the small frozen external welfare-vector artifact, not model weights.
-The included tokenizer files are tokenizer/chat-template assets only.
-Verify SHA256SUMS.txt before relying on any claimed hash.
-TXT
+          printf '%s\n' \
+            'ARPM Minimal S1/S2 adversarial referee bundle.' \
+            'Status: READY_FOR_ADVERSARIAL_REVIEW_NOT_LIVE_RUN.' \
+            'No live experimental model inference has been performed.' \
+            'The included .pt file is the small frozen external welfare-vector artifact, not model weights.' \
+            'The included tokenizer files are tokenizer/chat-template assets only.' \
+            'Verify SHA256SUMS.txt before relying on any claimed hash.' \
+            > referee_bundle/README_FOR_REFEREE.txt
           (
             cd referee_bundle
             find . -type f ! -name SHA256SUMS.txt -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS.txt
