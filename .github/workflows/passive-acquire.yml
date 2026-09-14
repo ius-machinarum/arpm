@@ -64,6 +64,7 @@ jobs:
             --out tokenizer_audit.json
 
       - name: Upload passive audit bundle
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: passive-episode-free-inputs
