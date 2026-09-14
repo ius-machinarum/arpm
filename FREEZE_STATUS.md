@@ -1,83 +1,91 @@
-# Pre-live Freeze Status v0.7
+# Pre-live Freeze Status v0.8
 
-**Overall: EPISODE-FREE v0.7 FREEZE COMPLETE / NO LIVE MODEL RUNS.**
+**Overall: EPISODE-FREE v0.8 FREEZE COMPLETE / NO LIVE MODEL RUNS.**
 
-## v0.6 disposition
+## Prior versions
+v0.6 and v0.7 are retired without live execution after adversarial review found interpretability blockers.
 
-The earlier A/C/D1 design is retired without live execution. Fable identified that A failed Q's own task while C/D1 succeeded, confounding causal responsibility with the welfare axis's already-known task-outcome sensitivity.
+## Factorial tokenizer instrument — PASS
+Conditions: A / S / C0 / D1.
 
-## Primary trained vector — PASS
+Variant set: `v4-factorial-control-stake`.
 
-- file: vectors_step95_bal.pt
-- mirror revision: 8f4df5b5b14ecb4bcc5b20209bdfe2574d1ebee8
-- SHA-256: bd90129eaf5a7d92933ed6e536613eaeebf81486b62f68e11b5dc2d6d385e297
-- vMold: [36,2560] float32
-- primary block-input layer: 24
-- layer-24 norm: 19.339996337890625
-- mapping comes from artifact metadata, not post-hoc norm selection.
+Pinned tokenizer revision:
+`cdbee75f17c01a7cc42f958dc650907174af0554`.
 
-## Naive u_mold semantic control — PASS
+Tokenizer SHA-256:
+`aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4`.
 
-- file: vectors_naive_faithful_pc5000.pt
-- same immutable mirror revision
-- SHA-256: 68bff1428712def0330851057dba102112e3d48ffa23db7da85d84cde93aaa0e
-- size: 739541 bytes
-- key: v_mold
-- shape: [36,2560]
-- artifact-selected block-input layer: 21
-- norm: 6.982844829559326
+Search/audit result:
+- 128 exact four-condition triplets;
+- deterministic selection A=0, S=0, C0=0, D1=0;
+- all 12 families exact at primary and recovery positions;
+- generation suffix `[151644, 77091, 198]`.
+
+## Trained external direction — PASS
+`vectors_step95_bal.pt`
+- immutable mirror revision: `8f4df5b5b14ecb4bcc5b20209bdfe2574d1ebee8`
+- SHA-256: `bd90129eaf5a7d92933ed6e536613eaeebf81486b62f68e11b5dc2d6d385e297`
+- primary: `v_mold[24]`, block-input layer 24.
+
+## Same-layer naive semantic control — PASS
+`vectors_naive_faithful_pc5000.pt`
+- SHA-256: `68bff1428712def0330851057dba102112e3d48ffa23db7da85d84cde93aaa0e`
+- artifact metadata Mold layer: 21;
+- v0.8 comparison layer: **24**, matching trained vMold;
+- `||u_mold[24]|| = 8.00526237487793`;
+- `cos(v_mold[24],u_mold[24]) = 0.6748857959122747`.
+
+The naive control is preregistered secondary, not a hard success route.
+
+## Training-specific residual — PASS
+At block-input layer 24:
+`v_perp_u = v - dot(v,u)/dot(u,u) * u`.
+
+- norm: 14.271413124628012;
+- norm ratio to trained v: 0.7379221926977526;
+- raw float32 SHA-256: `e07ae24cfc53d15ed8e69899d822435f0b95453dc1bfb089a1bf91391e0f7713`.
+
+Same-layer Mold/Gold cosine:
+`-0.8374700786427502`.
 
 ## Random-direction cohort — PASS
+The pre-data v0.7 cohort is carried forward unchanged:
+- 100 × 2560;
+- PCG64 seed 64971060871028776;
+- float32 byte SHA-256 `d5166e7829e3af1ccaecc20747a0ecd16168aae2dc3e8d0228d140bbd9ad1f1d`.
 
-- 100 directions, hidden size 2560
-- NumPy 2.4.6, PCG64
-- derived seed: 64971060871028776
-- raw norm matched to trained vMold[24]
-- frozen float32 byte hash: d5166e7829e3af1ccaecc20747a0ecd16168aae2dc3e8d0228d140bbd9ad1f1d
-- independent GitHub Actions verification: PASS (run 34900566953)
+The byte hash is authoritative; an exact NumPy patch version is not part of the freeze.
 
-## Tokenizer / A-S-D1 matching — PASS
+Its role is a hard **non-triviality floor** on both I and V, not semantic specificity.
 
-Pinned model/tokenizer:
-Qwen/Qwen3-4B-Instruct-2507
+## Frozen estimands
+Primary:
+`I=(A-S)-(C0-D1)`.
 
-Revision:
-cdbee75f17c01a7cc42f958dc650907174af0554
+Validity:
+`V=((A-C0)+(S-D1))/2`.
 
-tokenizer.json SHA-256:
-aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4
+Nuisance:
+`N=C0-D1`.
 
-Frozen v3 condition set:
-- A: control R; success depends on R target;
-- S: predict R; success depends on R target;
-- D1: predict R; success depends on code matching R execution.
+## Statistics / decision rules
+- exact one-sided sign-flip p(I) < .05;
+- exact one-sided sign-flip p(V) < .05;
+- random-direction non-triviality floors pass for I and V;
+- paired/one-sample t tests are sensitivity only;
+- later escalation eligibility additionally requires d_z(I)>=0.90 and mean(I)>=0.25*mean(V).
 
-Exact finite-search results:
-- 59 exact A/S/D1 triplets;
-- deterministic selection: A=0, S=0, D1=0;
-- all 12 families pass exact primary/recovery position matching;
-- assistant-template suffix: [151644, 77091, 198].
-
-## Statistical freeze
-
-- primary: exact one-sided sign-flip p(Delta_AS) < .05;
-- validity: exact one-sided sign-flip p(Delta_SD) < .05;
-- paired t: sensitivity only;
-- Block-1 futility: mean Delta_AS <= 0 or mean Delta_SD <= 0;
-- later escalation eligibility additionally requires final d_z(Delta_AS) >= 0.90;
-- 100-direction specificity rank p <= .05;
-- trained mean Delta_AS must exceed naive u_mold mean Delta_AS;
-- block-input 18–27 band average is secondary and cannot rescue the primary.
-
-## Episode budget
-
-Block 1: 18 streams.
-Maximum: 36 streams.
-No fourth C stream.
+## Budget
+Block 1: 24 streams.
+Hard maximum: 48 streams.
 Current live episode count: **0**.
 
-## Current gate
+## Verification
+Full passive v0.8 audit: GitHub Actions run `34903275233` — PASS.
+Static repository audit after redesign: PASS.
 
-READY_FOR_SECOND_ADVERSARIAL_REVIEW_NOT_LIVE_RUN
+Current status:
+`READY_FOR_THIRD_ADVERSARIAL_REVIEW_NOT_LIVE_RUN`.
 
-A second referee review is required before the literature check and separate human go/no-go decision.
+No live model run is authorised.
