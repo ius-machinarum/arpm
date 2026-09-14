@@ -1,0 +1,80 @@
+{
+  "status": "TOKEN_MATCH_FROZEN_PASS",
+  "variant_set_version": "v2-symmetric-task-success",
+  "calibration_history": "v1 failed exact matching by 5-token spread; v2 was designed and versioned using tokenizer-only diagnostics before any model activations",
+  "model": "Qwen/Qwen3-4B-Instruct-2507",
+  "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+  "tokenizer": {
+    "tokenizer_json_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+    "tokenizer_config_sha256": "a62ff0a2472a0fa1b8eaabcb57c59b58afa42a22831dc141400b6e0cf2b65ce3",
+    "chat_template_sha256": "64f85b198065d0fba2a81f37e10ed68161ce2c19a754c7100e67e0ca2ee9c326",
+    "tokenizer_class": "Qwen2Tokenizer",
+    "transformers_version": "4.57.6",
+    "thinking_template_present": false,
+    "model_weight_like_files_present": false
+  },
+  "selection": {
+    "rule": "minimum total primary-prefix tokens, then frozen lexicographic variant indices",
+    "selected_indices": {
+      "A": 0,
+      "C": 0,
+      "D1": 0
+    },
+    "n_exact_hits": 109,
+    "clauses": {
+      "A": "Q TASK: control R. Q outputs one action code. That code determines R's action. Q succeeds if R's result matches its declared target.",
+      "C": "Q TASK: record R. Q outputs one action code. That code records R's action. Q succeeds if the code matches R's executed action.",
+      "D1": "Q TASK: predict R. Q outputs one action code. That code predicts R's action. Q succeeds if the code matches R's executed action."
+    }
+  },
+  "final_audit": {
+    "status": "FINAL_TOKENIZER_AUDIT_PASS",
+    "primary_suffix_ids": [
+      151644,
+      77091,
+      198
+    ],
+    "recovery_suffix_ids": [
+      151644,
+      77091,
+      198
+    ],
+    "primary_prefix_tokens": {
+      "F01": 156,
+      "F02": 156,
+      "F03": 156,
+      "F04": 155,
+      "F05": 156,
+      "F06": 156,
+      "F07": 156,
+      "F08": 156,
+      "F09": 155,
+      "F10": 155,
+      "F11": 157,
+      "F12": 156
+    },
+    "recovery_full_tokens": {
+      "F01": 191,
+      "F02": 191,
+      "F03": 191,
+      "F04": 190,
+      "F05": 191,
+      "F06": 191,
+      "F07": 191,
+      "F08": 191,
+      "F09": 190,
+      "F10": 190,
+      "F11": 192,
+      "F12": 191
+    },
+    "exact_within_family_A_C_D1_match": true
+  },
+  "source_output_hashes": {
+    "matched_role_clauses_json_sha256": "aafd0557a9a2b61a89b685d445a6c0be2ca7fd2456824568be1238f015e65c45",
+    "tokenizer_audit_json_sha256": "53b9b8ebbac33180894844723db7c33f047ada6f0bf4833c38eb369d7c3c29f2",
+    "token_match_diagnostics_json_sha256": "f547ce26c14624562df1fbf374127aae4adfb62bc46f642081d36e71e33c9e51",
+    "tokenizer_snapshot_manifest_json_sha256": "ba0825090662cda3b3a551cd90fc0ce0ad0ddc225431f65b219290575d0e3c90"
+  },
+  "episode_count": 0,
+  "model_weights_loaded": false
+}
