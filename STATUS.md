@@ -1,37 +1,23 @@
 # Project status
 
-**Current status: v0.7 FROZEN FOR SECOND ADVERSARIAL REVIEW.**
+**Current status: v0.8 FACTORIAL REDESIGN — EPISODE-FREE REFREEZE IN PROGRESS.**
 
 **NO LIVE MODEL RUNS PERMITTED.**
 
-The v0.6 A/C/D1 design was retired after Fable identified a task-outcome confound. No live activations had been collected.
+The v0.7 A/S/D1 design is retired after second-round adversarial review found a remaining role-confirmation confound.
 
-The v0.7 redesign is now prospectively frozen around three conditions:
+v0.8 completes the 2x2:
+- A = control + outcome stake;
+- S = predict + outcome stake;
+- C0 = control + no outcome stake;
+- D1 = predict + no outcome stake.
 
-- A: control + outcome stake;
-- S: outcome stake without control;
-- D1: no control + no outcome stake.
+Primary candidate estimand:
+`I=(A-S)-(C0-D1)`.
 
-Primary contrast: Delta_AS = Mold(A) - Mold(S).
+Validity candidate:
+`V=((A-C0)+(S-D1))/2`.
 
-Positive-control / validity contrast: Delta_SD = Mold(S) - Mold(D1).
+No live activations have been collected. Ethical episode count remains **0**.
 
-Episode-free checks completed:
-- exact A/S/D1 tokenizer matching: 59 exact triplets, deterministic selection (0,0,0);
-- trained external vMold artifact byte freeze;
-- naive u_mold semantic-control byte freeze;
-- deterministic 100-direction random specificity cohort freeze;
-- tokenizer/chat-template byte audit;
-- passive workflow verification with no language-model weights.
-
-Ethical episode count remains **0** and experimental model weights have not been loaded.
-
-## Next gate
-
-One second-round adversarial referee review of the v0.7 self-verifying bundle.
-
-Only after referee blockers are resolved:
-1. fresh literature check;
-2. separate human scientific + ethical go/no-go decision.
-
-Referee acceptance alone does not authorise live inference.
+The current work is restricted to tokenizer/artifact/CI checks. Only after a successful v0.8 episode-free freeze will a third adversarial referee bundle be considered. Referee acceptance still will not authorise live inference; a fresh literature check and separate human go/no-go remain mandatory.
