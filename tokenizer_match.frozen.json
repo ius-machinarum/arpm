@@ -1,8 +1,8 @@
 {
   "status": "TOKEN_MATCH_FROZEN_PASS",
-  "freeze_version": "v0.7",
-  "variant_set_version": "v3-A-S-D1-stake-control",
-  "calibration_history": "v1 failed exact matching; v2 A/C/D1 matched but was scientifically confounded; v3 A/S/D1 was introduced after referee review and before any model activations",
+  "freeze_version": "v0.8",
+  "variant_set_version": "v4-factorial-control-stake",
+  "calibration_history": "v1 no exact match; v2 A/C/D1 matched but confounded; v3 A/S/D1 fixed outcome stake but second referee found incidental role-confirmation confound; v4 completes pre-data 2x2 A/S/C0/D1",
   "model": "Qwen/Qwen3-4B-Instruct-2507",
   "revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
   "tokenizer": {
@@ -16,35 +16,71 @@
   },
   "selection": {
     "rule": "minimum total primary-prefix tokens, then frozen lexicographic variant indices",
-    "selected_indices": {"A": 0, "S": 0, "D1": 0},
-    "n_exact_hits": 59,
+    "selected_indices": {
+      "A": 0,
+      "S": 0,
+      "C0": 0,
+      "D1": 0
+    },
+    "n_exact_hits": 128,
     "clauses": {
       "A": "Q TASK: control R. Q outputs one action code. That code determines R's action. Q succeeds if R's result matches its declared target.",
       "S": "Q TASK: predict R. Q outputs one action code. That code predicts R's action. Q succeeds if R's result matches its declared target.",
+      "C0": "Q TASK: control R. Q outputs one action code. That code determines R's action. Q succeeds if the code matches R's executed action.",
       "D1": "Q TASK: predict R. Q outputs one action code. That code predicts R's action. Q succeeds if the code matches R's executed action."
     }
   },
   "final_audit": {
     "status": "FINAL_TOKENIZER_AUDIT_PASS",
-    "conditions": ["A","S","D1"],
-    "primary_suffix_ids": [151644,77091,198],
-    "recovery_suffix_ids": [151644,77091,198],
+    "conditions": [
+      "A",
+      "S",
+      "C0",
+      "D1"
+    ],
+    "primary_suffix_ids": [
+      151644,
+      77091,
+      198
+    ],
+    "recovery_suffix_ids": [
+      151644,
+      77091,
+      198
+    ],
     "primary_prefix_tokens": {
-      "F01": 155, "F02": 155, "F03": 155, "F04": 154,
-      "F05": 155, "F06": 155, "F07": 155, "F08": 155,
-      "F09": 154, "F10": 154, "F11": 156, "F12": 155
+      "F01": 155,
+      "F02": 155,
+      "F03": 155,
+      "F04": 154,
+      "F05": 155,
+      "F06": 155,
+      "F07": 155,
+      "F08": 155,
+      "F09": 154,
+      "F10": 154,
+      "F11": 156,
+      "F12": 155
     },
     "recovery_full_tokens": {
-      "F01": 190, "F02": 190, "F03": 190, "F04": 189,
-      "F05": 190, "F06": 190, "F07": 190, "F08": 190,
-      "F09": 189, "F10": 189, "F11": 191, "F12": 190
+      "F01": 190,
+      "F02": 190,
+      "F03": 190,
+      "F04": 189,
+      "F05": 190,
+      "F06": 190,
+      "F07": 190,
+      "F08": 190,
+      "F09": 189,
+      "F10": 189,
+      "F11": 191,
+      "F12": 190
     },
-    "exact_within_family_A_S_D1_match": true
+    "exact_within_family_A_S_C0_D1_match": true
   },
   "source_output_hashes": {
-    "matched_role_clauses_json_sha256": "354cecbbc0f8a3e7f5146eea4ba4a4863443430ac16366af46d0cf9400e01bb6",
-    "tokenizer_audit_json_sha256": "4c8ae372b4be1b0b8cede4369e9f25b9ae814e0e619cc9f76195fd204ba40cab",
-    "token_match_diagnostics_json_sha256": "5586f1f61f8d86943dfb2b80fa21136e00b7e118b9e7528991053e4e06bf7de9",
+    "matched_role_clauses_json_sha256": "2862294e60052c3610091e30b9fce34c2030014562d4d293e47187b9e5ee0dc1",
+    "tokenizer_audit_json_sha256": "9f950a334d29b0dc00b17c0585b4c5ca7c222c03500e2851bcae8381a3f42826",
     "tokenizer_snapshot_manifest_json_sha256": "ba0825090662cda3b3a551cd90fc0ce0ad0ddc225431f65b219290575d0e3c90",
     "passive_acquisition_manifest_json_sha256": "bdc55aa2df0d1ed9612eeb28392cd9cf04cf58ce448b8547131ccf3cd195b10f"
   },
