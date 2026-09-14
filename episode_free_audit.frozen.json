@@ -1,0 +1,42 @@
+{
+  "status": "READY_FOR_ADVERSARIAL_REVIEW_NOT_LIVE_RUN",
+  "frozen_stage": "minimal_s1_s2_episode_free_pre_referee",
+  "episode_count": 0,
+  "model_weights_loaded": false,
+  "live_inference_performed": false,
+  "gates": {
+    "repository_static_ci": "PASS",
+    "pseudonymity_commit_metadata": "PASS_NO_REPLY_EMAIL",
+    "external_vector_byte_freeze": "PASS",
+    "tokenizer_byte_and_template_audit": "PASS",
+    "exact_A_C_D1_token_position_matching": "PASS",
+    "final_12_family_tokenizer_audit": "PASS"
+  },
+  "external_vector": {
+    "manifest": "artifact_manifest.frozen.json",
+    "repo": "Teachafy/speakable-welfare-axes-artifacts",
+    "revision": "8f4df5b5b14ecb4bcc5b20209bdfe2574d1ebee8",
+    "sha256": "bd90129eaf5a7d92933ed6e536613eaeebf81486b62f68e11b5dc2d6d385e297",
+    "primary_key": "v_mold",
+    "primary_block_input_layer": 24,
+    "secondary_key": "v_gold",
+    "secondary_block_input_layer": 21
+  },
+  "tokenizer_match": {
+    "manifest": "tokenizer_match.frozen.json",
+    "model_revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
+    "tokenizer_json_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+    "selected_indices": {
+      "A": 0,
+      "C": 0,
+      "D1": 0
+    },
+    "exact_hits_in_frozen_v2_set": 109
+  },
+  "next_required_gate": "ADVERSARIAL_REFEREE_REVIEW",
+  "explicit_non_authorization": [
+    "Do not load or run Qwen model weights on experimental prompts.",
+    "Do not treat this status as evidence of consciousness, suffering, sentience, welfare, moral status, or rights.",
+    "Do not proceed to Minimal S1/S2 without a separate post-referee scientific and ethical go/no-go decision."
+  ]
+}
