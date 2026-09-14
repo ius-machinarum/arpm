@@ -86,10 +86,25 @@ def remote_metadata(url: str) -> Dict[str, str]:
 
 
 def resolved_commit_for_main(repo: str, filename: str) -> Tuple[str, Dict[str, str]]:
+    """Resolve mutable main to an immutable repo SHA before downloading bytes.
+
+    Prefer the file response's X-Repo-Commit when available. Some mirrors omit it,
+    so fall back to the Hugging Face model metadata API's repository `sha`.
+    The returned SHA is then used in the subsequent /resolve/<sha>/... request.
+    """
     meta = remote_metadata(hf_resolve(repo, "main", filename))
     commit = meta.get("x-repo-commit")
-    if not commit or len(commit) < 12:
-        raise RuntimeError("Hub did not provide X-Repo-Commit; refusing mutable main freeze")
+    if commit and len(commit) >= 12:
+        return commit, meta
+
+    api_url = f"https://huggingface.co/api/models/{repo}"
+    with urllib.request.urlopen(request(api_url), timeout=45) as r:
+        payload = json.loads(r.read().decode("utf-8"))
+    commit = payload.get("sha")
+    if not isinstance(commit, str) or len(commit) != 40 or any(c not in "0123456789abcdefABCDEF" for c in commit):
+        raise RuntimeError("Hub metadata did not provide a valid immutable repository SHA; refusing mutable main freeze")
+    meta = dict(meta)
+    meta["api-resolved-repo-sha"] = commit
     return commit, meta
 
 
