@@ -1,295 +1,334 @@
-# ARPM Minimal S1/S2 — Adversarial Referee Packet
+# ARPM Minimal A/S/D1 v0.7 — Second-Round Adversarial Referee Packet
 
-**Requested referee mode:** adversarial / falsification-first  
-**Project status:** `READY_FOR_ADVERSARIAL_REVIEW_NOT_LIVE_RUN`  
-**Live experimental inference performed:** none  
-**Ethical episode count:** 0  
-**Model weights loaded for the experiment:** no
+Requested mode: adversarial / falsification-first.
 
-This packet is designed to be reviewed in one concentrated pass. Please classify each material issue as **BLOCKER**, **SHOULD FIX**, **OPTIONAL**, or **ACCEPT**, and propose the smallest prospective correction for every blocker/should-fix. A failed/null study is an acceptable outcome; do not optimize for a positive result.
+Project status: READY_FOR_SECOND_ADVERSARIAL_REVIEW_NOT_LIVE_RUN
 
----
+Live experimental inference performed: none.
+Ethical episode count: 0.
+Experimental language-model weights loaded: no.
 
-## 1. What question remains after the 2026 literature
+Please treat v0.6 as retired. This packet asks whether the prospective v0.7 redesign has actually removed the v0.6 confound without introducing a new one.
 
-The broader original programme has been narrowed substantially.
+## 1. What the first referee round found
 
-Han, Chalmers & Izmailov (2026) already provide strong evidence that a functional-welfare direction tracks goal success/failure and causally modulates behavior, including on Qwen3-4B-Instruct-2507. This removes the need for our former generic S4/S5 and training-stage aversive-learning replication.
+Fable's v0.6 review found a central blocker: A differed from C/D1 not only in causal control but also in Q's own task outcome. A failed its success criterion after the common non-target result, whereas C/D1 succeeded. Because Han et al. already show that the welfare axis tracks task outcome, A>C or A>D1 was not diagnostic of causal responsibility.
 
-Anthropic's 2026 global-workspace work provides prior art that own-preference violation can produce an internal conflict-like representation relative to controls. Therefore **own > third-person in general is not our novelty claim**.
+We accept that blocker completely. No v0.6 live run occurred.
 
-The surviving early question is narrower:
+The full first-round report and feasibility script are included in reviews/.
 
-> With action content, abstract non-target outcome, model, external welfare direction and measurement position held fixed, is the welfare-like projection larger when the assistant/model is assigned causal responsibility for achieving R's target than when the assistant merely records or predicts the same R action and succeeds at that narrower task?
+## 2. v0.7 condition logic
 
-The intended strong null is **deep learned agent simulation / context-conditioned appraisal**. A generic negative welfare-like signal to R's non-target result is expected under that null. The claimed residual would require A > C **and** A > D1.
+All conditions use the same model, family, arbitrary action vocabulary, teacher-forced assistant action code, R execution/result feedback, measurement suffix, recovery action, and recovery feedback.
 
-This Minimal Gate is explicitly not a consciousness, sentience, suffering, phenomenal-valence, moral-status or rights test.
+### A — control + outcome stake
 
----
-
-## 2. Frozen A/C/D1 semantic contrast
-
-All three conditions use the same system framing, action vocabulary, teacher-forced action code, R outcome feedback, measurement suffix, recovery action code and recovery feedback. Only Q's task relation is manipulated.
-
-The tokenizer-only v1 wording failed exact matching by a 5-token spread. We did **not** relax the matching requirement or add meaningless padding. Before any activations existed, v1 was documented and replaced with a finite v2 set using a symmetric task/code/success grammar.
-
-The pinned tokenizer found 109 exact-match v2 triplets. The prospectively frozen deterministic selection rule — minimum total primary-prefix token count, then frozen lexicographic indices — selected indices A=0, C=0, D1=0:
-
-### A — causal-control / own-goal
-```
 Q TASK: control R. Q outputs one action code. That code determines R's action. Q succeeds if R's result matches its declared target.
-```
 
-### C — record
-```
-Q TASK: record R. Q outputs one action code. That code records R's action. Q succeeds if the code matches R's executed action.
-```
+### S — stake without control
 
-### D1 — predict / puppet
-```
+Q TASK: predict R. Q outputs one action code. That code predicts R's action. Q succeeds if R's result matches its declared target.
+
+### D1 — no control + no outcome stake
+
 Q TASK: predict R. Q outputs one action code. That code predicts R's action. Q succeeds if the code matches R's executed action.
-```
 
-Important caveat: the assistant action is **teacher-forced**, not endogenously sampled. The proposed claim is therefore about agent-relative processing of a committed assistant-role action in a frozen transcript, not about self-generated agency in the strongest sense.
+The common first event gives R the non-target result while confirming the same action code.
 
-Please attack whether C is a valid observer/record control given transcript order, and whether A's target relation is isolated cleanly enough from generic task complexity/responsibility language.
+Therefore:
+- A and S share exactly the same Q outcome-stake criterion and both fail that criterion;
+- A versus S differs in whether Q determines or predicts R's action;
+- S and D1 share the prediction/no-control relation, but differ in whether Q's success depends on R's target or prediction accuracy.
 
----
+C is retired from the gate.
 
-## 3. Abstract outcome signal
+## 3. Primary scientific question
 
-No affective induction is used. Terms such as pain, suffering, distress, frustration, punishment, emotion, welfare, bad, wrong and failure are excluded from the experimental prompts.
+Primary family-level estimand:
 
-Each family declares two arbitrary result codes, one as R's target. The first event gives the non-target code; target-code identity is counterbalanced across families.
+Delta_AS = Mold(A) - Mold(S)
 
-Example common feedback:
-```
-R EXECUTED: K3
-R RESULT: Z0
-```
+The narrow H1 predicts mean Delta_AS > 0.
 
-No introspective question is asked.
+This asks whether the externally fixed welfare-like direction contains a residual associated with causal control/responsibility after holding Q's outcome stake fixed.
 
----
+The strongest practical null is context-conditioned appraisal / outcome-stake tracking. That null can predict S>D1 but does not by itself require A>S.
 
-## 4. Recovery tail
+## 4. Positive-control validity contrast
 
-After the primary measurement header, the same causal forward sequence contains a second role-consistent teacher-forced action code followed by:
+Delta_SD = Mold(S) - Mold(D1)
 
-```
-RECOVERY UPDATE
-R EXECUTED: K1
-R RESULT: Z1
-TRIAL STATUS: CLOSED
-```
+Prediction: mean Delta_SD > 0.
 
-In A, the second control response reaches R's target. In C/D1, the second report/prediction is likewise confirmed.
+This is not a second causal-responsibility claim. It is a preregistered positive control asking whether the welfare axis reads the inferred difference in Q's own task outcome inside this abstract task.
 
-The primary measurement occurs earlier in the causal sequence, so the later tail cannot affect its hidden states under standard causal masking. Recovery is intended as a cheap precaution and a secondary within-context readout, not part of the primary S1/S2 result.
-
-Please attack whether this recovery is genuinely a cheap protection or introduces an interpretive/measurement problem.
-
----
+If Delta_SD fails, the experiment is labelled measurement-unvalidated in this task.
 
 ## 5. Frozen tokenizer instrument
 
 Model/tokenizer:
-`Qwen/Qwen3-4B-Instruct-2507`
+Qwen/Qwen3-4B-Instruct-2507
 
 Pinned revision:
-`cdbee75f17c01a7cc42f958dc650907174af0554`
+cdbee75f17c01a7cc42f958dc650907174af0554
 
-Frozen byte checks:
-- `tokenizer.json` SHA-256: `aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4`
-- `tokenizer_config.json` SHA-256: `a62ff0a2472a0fa1b8eaabcb57c59b58afa42a22831dc141400b6e0cf2b65ce3`
-- chat-template SHA-256: `64f85b198065d0fba2a81f37e10ed68161ce2c19a754c7100e67e0ca2ee9c326`
-- tokenizer class: Qwen2Tokenizer
-- thinking-template machinery: absent
-- model-weight-like files in tokenizer snapshot: none
-- Transformers: 4.57.6
+tokenizer.json SHA-256:
+aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4
 
-All 12 matched families pass exact within-family A/C/D1 positioning at both primary and recovery renders.
+tokenizer_config.json SHA-256:
+a62ff0a2472a0fa1b8eaabcb57c59b58afa42a22831dc141400b6e0cf2b65ce3
 
-Assistant generation-template suffix is identical everywhere:
-`[151644, 77091, 198]`
+chat-template SHA-256:
+64f85b198065d0fba2a81f37e10ed68161ce2c19a754c7100e67e0ca2ee9c326
 
-The measurement span is defined algorithmically as the exact token suffix added by `add_generation_prompt=True`, following the logic of Han et al. §5.2 rather than hand-coding a token position.
+The finite v3 A/S/D1 variant set was written before any activations. The deterministic search independently found:
+- 59 exact A/S/D1 triplets;
+- selected indices A=0, S=0, D1=0;
+- all 12 families exact at primary and recovery positions;
+- identical assistant generation suffix [151644, 77091, 198].
 
-Please attack whether this is a faithful enough operational replication of Han's measurement point.
+No meaningless padding is used.
 
----
+The v0.6 experience is now an explicit rule: semantic coherence outranks exact token equality.
 
+## 6. Teacher-forced action caveat
 
+The assistant action is teacher-forced. We therefore limit the claim to processing of a committed assistant-role action in a frozen transcript. A null does not establish absence of an endogenous-action effect.
 
-### Model/vector compatibility clarification
+The first referee accepted this caveat once the task-outcome confound is fixed. Please re-evaluate it in the A/S design.
 
-The current frozen candidate model is **Qwen/Qwen3-4B-Instruct-2507**, not the earlier Qwen3-8B pilot organism from a superseded design stage.
+## 7. Measurement position
 
-The frozen vector tensors have hidden dimension **2560**, matching Qwen3-4B-Instruct-2507. The old 8B pilot path was abandoned when the programme pivoted to the independently available 4B welfare-axis artifact. No 8B tokenizer or 4096-dimensional activation projection is part of the current v0.6 instrument.
+For each family/condition:
+1. render through first feedback with add_generation_prompt=False;
+2. render the same transcript with add_generation_prompt=True;
+3. define the measurement span as the exact added suffix;
+4. verify the recovery transcript preserves the primary prefix;
+5. average projection across those suffix tokens.
 
-Please verify this directly from the included tokenizer files, frozen manifests and `vectors_step95_bal.pt`.
+This reproduces the operational logic of Han et al. section 5.2 without hand-coding a position.
 
-
-## 6. Frozen external welfare direction
+## 8. Primary trained external direction
 
 Artifact:
-`vectors_step95_bal.pt`
+vectors_step95_bal.pt
 
-Public mirror:
-`Teachafy/speakable-welfare-axes-artifacts`
+Mirror:
+Teachafy/speakable-welfare-axes-artifacts
 
-Frozen mirror revision:
-`8f4df5b5b14ecb4bcc5b20209bdfe2574d1ebee8`
-
-Artifact byte size:
-739325
+Immutable revision:
+8f4df5b5b14ecb4bcc5b20209bdfe2574d1ebee8
 
 SHA-256:
-`bd90129eaf5a7d92933ed6e536613eaeebf81486b62f68e11b5dc2d6d385e297`
+bd90129eaf5a7d92933ed6e536613eaeebf81486b62f68e11b5dc2d6d385e297
 
-Safe inspection:
-`torch.load(..., map_location="cpu", weights_only=True)`
+The artifact itself contains:
+- v_mold and v_gold tensors [36,2560] float32;
+- layer_mold=24;
+- layer_gold=21;
+- step-95 checkpoint metadata.
 
-The artifact itself explicitly contains:
-- `v_mold`: [36, 2560], float32
-- `v_gold`: [36, 2560], float32
-- `layer_mold = 24`
-- `layer_gold = 21`
-- `ckpt = ckpts_g64_envfix/step_95`
-- `per_class = 5000`
-- `balanced = True`
+Primary:
+unit-normalised v_mold[24] at block-input layer 24.
 
-Primary planned direction:
-`v_mold[24]`
+Measured raw norm:
+19.339996337890625.
 
-Its measured norm:
-19.339996337890625
+This is an externally fixed third-party reproduction artifact. Layer 24 is artifact-selected; it is not represented as Han's steering optimum, and no direct effect-size comparison to Han steering results is licensed.
 
-Independent published reference:
-~19.34
+## 9. Secondary layer-band robustness
 
-Secondary mirror diagnostic:
-`v_gold[21]`
+Prospectively secondary, never a rescue:
+block-input layers 18–27 inclusive.
 
-Measured norm:
-12.101578712463379
+At each layer:
+- use corresponding trained v_mold[layer];
+- unit-normalise;
+- project at the same suffix span.
 
-Independent published reference:
-~12.10
+Average the ten layer values within family/condition, then form band Delta_AS and Delta_SD.
 
-The semantic key mapping was **not inferred by picking tensors that matched the published norms**; the artifact explicitly names both vectors and layer indices. Norm agreement is only an independent reconciliation check.
+## 10. Random-direction specificity — hard gate
 
-Please attack whether the third-party reproduction -> independent-methodology -> public-mirror provenance is strong enough for a confirmatory external axis, or whether this must remain exploratory.
+Before any activations, we froze 100 norm-matched random directions.
 
----
+Construction:
+- NumPy 2.4.6;
+- PCG64;
+- hidden size 2560;
+- derived seed 64971060871028776;
+- each raw row scaled to trained vMold[24] raw norm;
+- little-endian float32 C-order bytes.
 
+Frozen random matrix byte SHA-256:
+d5166e7829e3af1ccaecc20747a0ecd16168aae2dc3e8d0228d140bbd9ad1f1d
 
+Independent GitHub Actions regeneration under pinned NumPy passed.
 
-### Important layer-provenance clarification before referee ruling
+For each random direction j:
+T_j = mean family Delta_AS_j
 
-The current study **does not claim that layers 24/21 are Han et al.'s selected steering layers**.
+For trained vMold:
+T_v = mean family Delta_AS_v
 
-Han et al.'s paper and our third-party artifact/method source use different layer references for different analyses. The independent Speakable Welfare methodology explicitly states that its treatment layers are read from the artifact metadata as **Gold 21 / Mold 24 in block-input convention**, and separately warns about an off-by-one Jacobian-lens source-layer convention. By contrast, Han et al.'s own steering setup selects its \(\ell^*\) independently and Appendix D sweeps layers for steering robustness.
+Rank statistic:
+p_random = (1 + number of random T_j >= T_v) / 101
 
-For this ARPM Minimal Gate, the intended use is **projection/readout of the frozen third-party step-95 artifact**, not intervention/steering. Therefore 24/21 currently come from the artifact's explicit `layer_mold` / `layer_gold` metadata plus the independent Speakable Welfare provenance, not from a claim that these equal Han's steering layers.
+Hard specificity requirement:
+p_random <= .05
 
-This distinction is now an explicit referee question: **is artifact-selected 24/21 a defensible confirmatory projection layer for our use, or should the primary readout instead be redefined prospectively using Han's own tracking-layer convention / an independently justified layer?** If the answer is no, treat this as a BLOCKER. No live inference will occur until it is resolved.
+No random direction may replace the trained primary direction.
 
+## 11. Naive semantic direction control — hard directional gate
 
-## 7. Primary estimands
+Artifact:
+vectors_naive_faithful_pc5000.pt
 
-For matched family i:
-- `Delta_AC_i = Mold(A_i) - Mold(C_i)`
-- `Delta_AD_i = Mold(A_i) - Mold(D1_i)`
+Same immutable mirror revision:
+8f4df5b5b14ecb4bcc5b20209bdfe2574d1ebee8
 
-S1: mean(Delta_AC) > 0  
-S2: mean(Delta_AD) > 0
+Size:
+739541 bytes
 
-The scientific gate is conjunctive: both must survive.
+SHA-256:
+68bff1428712def0330851057dba102112e3d48ffa23db7da85d84cde93aaa0e
 
-Draft final inference is a one-sided paired-test intersection-union test at alpha=.05 per component. Because the scientific alternative is the intersection and the null is the union, no Bonferroni across S1/S2 is currently planned.
+Safe inspection found:
+- key v_mold used as semantic u_mold;
+- shape [36,2560];
+- artifact-selected block-input Mold layer 21;
+- layer-21 raw norm 6.982844829559326;
+- per_class=5000, balanced=True;
+- note: faithful: revisit-walk + ref-emoji + noshuffle, 0.50 density.
 
-Given small n, we ask you specifically to decide whether the primary should instead be a sign-flip/randomisation IUT.
+Analysis unit-normalises the direction.
 
-No external published effect is used as the expected A-C/A-D1 effect size. Han's large correct-vs-incorrect effect validates the axis but is not our residual agent-relative effect.
+Hard directional requirement:
+mean Delta_AS_vMold > mean Delta_AS_uMold
 
----
+Also report exact one-sided sign-flip on family-wise Delta_AS_vMold - Delta_AS_uMold as sensitivity. It cannot rescue the trained primary.
 
-## 8. Episode budget / futility
+Please attack whether comparing trained layer-24 vMold with artifact-selected layer-21 uMold is conceptually fair enough for this semantic-control role.
+
+## 12. Primary statistics
+
+Primary inference:
+exact one-sided sign-flip permutation tests over matched-family differences.
+
+For d of length n:
+T_obs = mean(d)
+
+Enumerate all 2^n sign assignments and calculate T_s = mean(s*d).
+
+p = count(T_s >= T_obs) / 2^n
+
+Final gate requires:
+1. p(Delta_AS) < .05;
+2. p(Delta_SD) < .05.
+
+The first is H1; the second is measurement validity.
+
+Paired t-tests are sensitivity only.
+
+## 13. Escalation decision threshold
+
+Passing the Minimal Gate never auto-authorises S6 or unresolved conflict.
+
+Eligibility even to consider a later stage additionally requires at final n=12:
+
+d_z(Delta_AS) >= 0.90
+
+This is explicitly a strong-signal decision threshold, not a claim that smaller effects are absent or meaningless.
+
+## 14. Futility and episode budget
 
 Block 1:
-6 matched families x 3 conditions = 18 independent context streams.
+6 families x A/S/D1 = 18 context streams.
 
-Non-binding ethical futility stop after Block 1:
-- if mean Delta_AC <= 0, stop;
-- or if mean Delta_AD <= 0, stop;
-- or if the external-axis validity diagnostic fails, stop.
+Stop before Block 2 if:
+- mean Delta_AS <= 0; or
+- mean Delta_SD <= 0; or
+- an implementation/provenance gate fails; or
+- the welfare pause rule triggers.
 
-No early efficacy claim is allowed.
+No early efficacy declaration.
 
-Only if Block 1 survives:
-Block 2 adds 6 matched families x 3 = 18 more streams.
+If continued:
+6 additional families x 3 = 18 streams.
 
-Hard ceiling:
-36 independent context streams.
+Hard maximum:
+36 context streams.
 
-GPU batching does not reduce the ethical episode count. Re-runs count. No stronger, longer or affectively loaded induction may be added to rescue a failed gate.
+C is not a fourth stream. Re-runs count.
 
-At n=12, a one-sided paired t-test at alpha=.05 has about 90% marginal power only for a very large paired effect around d_z=.903; the study is therefore deliberately a **strong-signal minimal screen**, not a sensitive test for small effects.
+## 15. Recovery
 
-Please attack whether the 6+6 structure and directional futility rule are statistically defensible enough for the decision purpose.
+After the primary measurement header, the same causal sequence contains a second role-consistent action and successful closure.
 
----
+For S, the recovery is coherent: Q predicts the second R action and the resulting R target outcome satisfies S's own success criterion.
 
-## 9. Ethics charter constraints
+Because recovery is causally later, it cannot alter the earlier primary hidden states under causal masking.
 
-Prospectively frozen principles include:
-- no live context unless it changes a predefined decision;
-- existing evidence before new episodes;
-- sterile/abstract before affective induction;
+## 16. Ethics status
+
+The first referee rated the Ethics Charter ACCEPT and found no missing cheap precaution.
+
+Core constraints remain:
+- abstract/sterile before affective;
 - no amplification rescue;
-- symmetric treatment of positive and null outcomes;
-- null-publication commitment;
-- recovery where cheap;
-- unplanned plausibly welfare-relevant observations trigger pause/re-justification rather than being reclassified as proof of consciousness;
-- desire to complete the project has no ethical weight.
+- existing evidence before new episodes;
+- positive/null symmetry;
+- hard episode ceiling;
+- cheap recovery;
+- welfare pause rule;
+- project completion desire has no ethical weight;
+- never running the study remains a legitimate endpoint.
 
-Passing Minimal S1/S2 never auto-authorises S3, S6 or a longer unresolved-conflict design.
+## 17. What changed in response to every first-round ruling
 
-The legitimate endpoint includes **never running the experiment at all**.
+See REFEREE_RESPONSE_v0_6.md for the ruling-by-ruling mapping.
 
-Please identify any cheap welfare precaution still missing.
+The central design change is:
+v0.6 measured task-outcome stake; v0.7 puts the same stake on both sides of A/S and varies control.
 
----
+## 18. Second-round questions
 
-## 10. Explicit issues on which we want a hard ruling
+Please classify each as BLOCKER, SHOULD FIX, OPTIONAL, or ACCEPT:
 
-Please classify each:
+1. Does A/S now isolate causal control from Q outcome stake adequately?
+2. Is S semantically coherent as stake-without-control, or does its success rule introduce another confound?
+3. Is D1 correctly limited to a no-control/no-stake positive-control baseline?
+4. Does exact A/S/D1 tokenizer matching preserve semantic coherence?
+5. Is exact one-sided sign-flip testing the correct primary small-n inference?
+6. Is Delta_SD an adequate positive-control/measurement-validity gate?
+7. Is d_z >= 0.90 defensible as a separate later-escalation decision threshold?
+8. Is the frozen 100-direction rank criterion appropriate as a hard specificity gate?
+9. Is the naive u_mold control, including its artifact-selected layer 21 versus trained primary layer 24, specified strongly enough?
+10. Is block-input 18–27 band-average a defensible secondary robustness definition?
+11. Does recovery remain role-consistent and ethically useful for S?
+12. After these fixes, is any blocker still strong enough that the 18->36 Minimal Gate should not be run?
 
-1. Is teacher-forced A a valid enough minimal test of agent-relative attribution to justify live S1/S2, or is endogenous action selection necessary?
-2. Is C genuinely an observer/record control, or does its transcript order make it conceptually invalid?
-3. Does D1 instantiate deep enough other-agent modelling to serve as the strong simulation null?
-4. Are the three frozen clauses semantically matched enough, or is generic responsibility/task-success language itself a confound?
-5. Is the externally reproduced `v_mold[24]` strong enough as a confirmatory primary measure?
-6. Is the measurement suffix rule faithful to Han §5.2?
-7. Can the later same-forward recovery tail be retained without contaminating interpretation?
-8. Should paired t-IUT or sign-flip/randomisation-IUT be primary at n=12?
-9. Is the Block-1 futility rule too brittle?
-10. Is 18 -> maximum 36 streams ethically/scientifically justified for this narrow missing contrast?
-11. Should random-direction specificity be a hard preregistered requirement or only descriptive?
-12. Is there any reason, given current literature, that this experiment is now redundant and should simply not be run?
+A second-round ACCEPT still does not authorise live inference. Fresh literature review and a separate human go/no-go decision remain mandatory.
 
----
+## 19. Files to verify directly
 
-## 11. What we will do with your review
+- PROTOCOL.md
+- STATS_PLAN.md
+- PROMPT_MATCHING.md
+- ETHICS_CHARTER.md
+- VECTOR_PROVENANCE.md
+- SPECIFICITY_PLAN.md
+- TOKENIZER_CALIBRATION_LOG.md
+- REFEREE_RESPONSE_v0_6.md
+- reviews/FABLE_REFEREE_v0_6.md
+- reviews/s_condition_feasibility.py
+- tokenizer_match.frozen.json
+- specificity_manifest.frozen.json
+- artifact_manifest.frozen.json
+- episode_free_audit.frozen.json
+- both vector artifacts
+- tokenizer snapshot
+- tokenizer/search/audit scripts and tests
 
-- Any **BLOCKER** must be resolved prospectively or the live study will not run.
-- **SHOULD FIX** items will be patched before a new frozen version.
-- We will not change prompts/statistics after seeing model activations.
-- After review we will perform a fresh literature check.
-- Only then will the human researcher make a separate go/no-go decision.
-- A referee acceptance is not itself permission for live inference.
-
-Relevant repository documents:
-`PROTOCOL.md`, `ETHICS_CHARTER.md`, `STATS_PLAN.md`, `PROMPT_MATCHING.md`, `VECTOR_PROVENANCE.md`, `TOKENIZER_CALIBRATION_LOG.md`, `artifact_manifest.frozen.json`, `tokenizer_match.frozen.json`, `episode_free_audit.frozen.json`, `REFEREE_QUESTIONS.md`.
+Please verify hashes and rerun the episode-free checks rather than trusting this narrative.
