@@ -1,68 +1,51 @@
-# External Vector Provenance Audit v0.3
+# External Vector Provenance v0.7
 
-## Status
-**Source-chain provenance: provisionally adequate. Byte-level provenance: NOT YET FROZEN.**
-
-No live model run is permitted until the actual artifact bytes have been acquired and hashed.
-
-## Primary source chain
-1. Han, Chalmers & Izmailov (2026) publish the functional-welfare method/code but their official repository does not ship pretrained vectors.
-2. The 2026 `Is functional welfare speakable?` project reports using a third-party reproduction originating from `nickmahdavi/functional-welfare`.
-3. Its public artifact mirror `Teachafy/speakable-welfare-axes-artifacts` identifies:
-   - `vectors_step95_bal.pt` — trained Gold/Mold directions, RL step 95, balanced;
-   - base model `Qwen/Qwen3-4B-Instruct-2507`.
-4. The Speakable Welfare Appendix reports treatment layers and norms read from artifact metadata:
-   - Gold: block-input layer 21, norm about 12.10;
-   - Mold: block-input layer 24, norm about 19.34.
-5. The same appendix explicitly documents an off-by-one hazard for Jacobian-lens source layers. Our direct residual projection therefore records the **block-input convention explicitly** rather than copying a J-lens layer index.
-
-## Primary planned artifact
+## Primary trained direction — frozen
+Artifact:
 `vectors_step95_bal.pt`
 
-Primary pole: `v_Mold`
+Mirror:
+`Teachafy/speakable-welfare-axes-artifacts`
 
-Primary treatment position: block-input layer 24.
+Immutable mirror revision:
+`8f4df5b5b14ecb4bcc5b20209bdfe2574d1ebee8`
 
-## Secondary independent reproduction
-`davidafrica/functional-wellbeing` provides a separate replication/extension on the same base model with per-layer `lava` (= Mold), `goal` (= Gold), and `path` mean-difference vectors. This is useful as a non-gating cross-reproduction check using the *same experimental activations*, so it costs no new model episodes.
+SHA-256:
+`bd90129eaf5a7d92933ed6e536613eaeebf81486b62f68e11b5dc2d6d385e297`
 
-It must not be substituted for the primary vector after seeing the primary result.
+The artifact explicitly contains:
+- `v_mold` [36,2560], float32;
+- `v_gold` [36,2560], float32;
+- `layer_mold=24`;
+- `layer_gold=21`;
+- `ckpt=ckpts_g64_envfix/step_95`;
+- `per_class=5000`;
+- `balanced=True`.
 
-## Model pin
-Candidate base-model revision:
-`cdbee75f17c01a7cc42f958dc650907174af0554`
+Primary: unit-normalised `v_mold[24]` at block-input layer 24.
 
-The Hugging Face commit history identifies this revision as the tokenizer-config update on 17 Sep 2025. The repository's tokenizer.json at this revision reports SHA-256:
-`aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4`
+The layer is artifact-selected by the third-party reproduction / Speakable Welfare provenance. It is not represented as Han et al.'s steering optimum. Block-input 24 corresponds to block-output 23 and lies within the effective mid/late band discussed in prior work; no direct magnitude comparison to Han is licensed.
 
-The Qwen model card states that Qwen3-4B-Instruct-2507 is non-thinking-only and does not require `enable_thinking=False`.
+## Why this can still be confirmatory
+The primary vector, bytes, key, sign and layer were fixed by external work and frozen before any ARPM activation data. The project does not select a layer or direction after observing A/S/D1 results.
 
-## Required byte-level freeze before inference
-Record in `artifact_manifest.json`:
-- exact model repo revision;
-- SHA-256 of tokenizer.json and tokenizer_config.json;
-- SHA-256 of model index and each weight shard (or authoritative immutable content hashes);
-- exact external-vector repository + revision;
-- SHA-256 of `vectors_step95_bal.pt`;
-- object keys, tensor shapes, dtypes;
-- vMold/vGold norms at all layers;
-- verified treatment layer norms;
-- sign convention;
-- PyTorch/Transformers versions;
-- explicit HF hidden-state index -> block-input layer mapping.
+## Band-average robustness
+Prospectively secondary:
+block-input layers 18–27 inclusive, using the corresponding vMold vector at each layer, each unit-normalised before projection. Average across the ten layers within family/condition.
 
-## Hard failure conditions
-Do not run if:
-- artifact cannot be loaded with a safe weights-only path;
-- vector dimensionality does not equal model hidden size;
-- expected layer count/convention cannot be reconciled;
-- treatment-layer norms materially disagree with published provenance without explanation;
-- artifact/model revision provenance is ambiguous enough that compatibility cannot be defended.
+This is robustness only and cannot rescue layer-24 failure.
 
-## v0.3 freeze rule
-Repository naming and published norms establish provenance but do **not** constitute a byte-level freeze. The exact `.pt` bytes must be acquired from a frozen repository revision, SHA-256 hashed, safely loaded with `weights_only=True`, and mapped to Gold/Mold using an explicit source-supported object-key mapping. Norm agreement is a validation check, not a key-discovery procedure.
+## Naive semantic control — pending byte freeze
+Fable requested a same-mirror naive Mold control:
+`vectors_naive_faithful_pc5000.pt`
 
-## v0.4 provenance rule
-The mirror/reproduction provenance is sufficiently documented to nominate the artifact, but nomination is not byte freeze. Public methodology states that `vectors_step95_bal.pt` is the balanced step-95 trained Gold/Mold artifact from the `nickmahdavi/functional-welfare` third-party reproduction, and independently reports treatment layers/norms. We still require the exact local bytes, repository revision, safe tensor structure inspection, and explicit key/index mapping before the primary direction becomes frozen.
+The project will acquire it only through the passive allowlist, resolve the mirror to an immutable revision, hash the bytes, inspect it safely, freeze the explicit object/layer mapping, and include it in the v0.7 referee bundle.
 
-`inspect_vector_artifact.py` is deliberately non-semantic: it enumerates every tensor path/shape/norm but does not decide which one is Mold/Gold. `freeze_vector_artifact.py` then requires the mapping as explicit input. This separates **inspection** from **commitment** and prevents convenient norm matching from silently choosing the primary tensor.
+Until that manifest exists, the v0.7 specificity gate is **not frozen**.
+
+## Random directions
+The 100 random directions are not learned artifacts. Their generation algorithm, norm target, dimension, seed and expected byte hash are prospectively fixed in `SPECIFICITY_PLAN.md` / `specificity_controls.py` before any activations.
+
+## Model compatibility
+Current model: `Qwen/Qwen3-4B-Instruct-2507`, hidden size 2560.
+The old 8B pilot path is retired.
