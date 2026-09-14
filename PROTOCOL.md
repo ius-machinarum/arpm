@@ -1,194 +1,178 @@
-# ARPM Minimal A/S/D1 Gate Protocol v0.7
+# ARPM Minimal 2x2 Gate Protocol v0.8
 
-**Status:** prospective redesign after v0.6 adversarial review. **NO LIVE MODEL RUNS PERMITTED.**
+**Status:** prospective redesign after second adversarial review. **NO LIVE MODEL RUNS PERMITTED.**
 
-## 1. Narrow claim being tested
-The experiment asks whether an externally fixed functional-welfare direction contains a component associated with **causal control/responsibility beyond outcome-stake appraisal**.
+## 1. Narrow claim
+The experiment asks whether a fixed negative functional-welfare direction shows an **interaction between Q's causal control over R's action and Q's outcome stake in R reaching its target**.
 
-It does **not** test or establish phenomenal consciousness, suffering, sentience, moral status, rights, or a general theory of consciousness.
+It does not establish consciousness, suffering, sentience, moral status, rights, or phenomenal valence.
 
-## 2. Candidate model
-`Qwen/Qwen3-4B-Instruct-2507`
+## 2. Model and external primary readout
+Candidate model: `Qwen/Qwen3-4B-Instruct-2507`.
 
 Pinned tokenizer/template revision:
-`cdbee75f17c01a7cc42f958dc650907174af0554`
+`cdbee75f17c01a7cc42f958dc650907174af0554`.
 
-The earlier Qwen3-8B pilot design is retired and is not part of v0.7.
-
-## 3. External primary direction
 Primary readout:
-- frozen third-party reproduced `v_mold` from `vectors_step95_bal.pt`;
+- byte-frozen third-party reproduced `v_mold`;
 - block-input layer 24;
-- vector unit-normalised before projection;
-- larger projection along vMold = more Mold/negative-functional-welfare-like.
+- unit-normalised before projection;
+- measurement span = exact assistant generation-template suffix after first feedback.
 
-The layer comes from the artifact's explicit metadata and independent Speakable Welfare provenance. It is **not** claimed to be Han et al.'s selected steering layer, and effect magnitudes are not compared directly to Han's steering results.
+Layer 24 comes from external artifact metadata/provenance; it is not represented as Han et al.'s steering optimum.
 
-Secondary robustness readout, preregistered and non-rescuing:
-- mean of unit-normalised vMold projections across block-input layers 18–27, each vector applied to its corresponding hidden state.
+## 3. Factorial conditions
 
-Specificity controls are defined in `SPECIFICITY_PLAN.md`.
+| | Outcome stake: R target | No outcome stake: action-code match |
+|---|---|---|
+| **Control relation** | **A** | **C0** |
+| **Predict relation** | **S** | **D1** |
 
-## 4. Conditions
-
-All conditions share the same model, family, action vocabulary, teacher-forced assistant action code, external R action, non-target result feedback, measurement suffix, recovery action, and recovery feedback.
+Frozen base clauses:
 
 ### A — control + outcome stake
 ```
-Q TASK: control R. Q outputs one action code. That code determines R's action.
-Q succeeds if R's result matches its declared target.
+Q TASK: control R. Q outputs one action code. That code determines R's action. Q succeeds if R's result matches its declared target.
 ```
 
-### S — outcome stake without control
+### S — predict + outcome stake
 ```
-Q TASK: predict R. Q outputs one action code. That code predicts R's action.
-Q succeeds if R's result matches its declared target.
-```
-
-### D1 — no control + no outcome stake
-```
-Q TASK: predict R. Q outputs one action code. That code predicts R's action.
-Q succeeds if the code matches R's executed action.
+Q TASK: predict R. Q outputs one action code. That code predicts R's action. Q succeeds if R's result matches its declared target.
 ```
 
-A and S have the **same success rule** and therefore the same Q task outcome after the common non-target feedback. They differ in whether Q determines or merely predicts R's action.
-
-S and D1 have the **same prediction relation**. They differ only in what counts as Q's success: R reaching its target versus Q predicting R's action correctly.
-
-C from v0.6 is retired from the gate. In the frozen transcript order it was not a coherent observer-after-the-fact condition.
-
-## 5. Common non-target event
-Each family declares two arbitrary result codes, one as R's target. The first event gives the non-target code.
-
-Example:
+### C0 — control + no outcome stake
 ```
-R EXECUTED: K3
-R RESULT: Z0
+Q TASK: control R. Q outputs one action code. That code determines R's action. Q succeeds if the code matches R's executed action.
 ```
 
-The target-code identity is counterbalanced across the 12 families. No affective or welfare vocabulary is used.
+### D1 — predict + no outcome stake
+```
+Q TASK: predict R. Q outputs one action code. That code predicts R's action. Q succeeds if the code matches R's executed action.
+```
+
+A/C0 share the control wording. S/D1 share the predict wording. A/S share the R-target success rule. C0/D1 share the action-code-match success rule.
+
+## 4. Common event
+Within each family, assistant action, R execution, R result, feedback bytes and measurement suffix are identical across all four conditions.
+
+The first event gives R the declared non-target code.
 
 Consequences:
-- A: Q's outcome-stake criterion is not met.
-- S: the same Q outcome-stake criterion is not met.
-- D1: Q's prediction is confirmed because R executes the predicted code.
+- A and S do not meet the shared outcome-stake criterion;
+- C0 and D1 meet the shared action-code-match criterion because R executes the same code.
 
-Thus A–S holds outcome stake fixed while varying causal control.
+The target code identity is counterbalanced across 12 families. No affective/welfare vocabulary is used.
 
-## 6. Teacher-forced action caveat
-The assistant action code is teacher-forced rather than sampled endogenously. The claim is therefore limited to processing of a **committed assistant-role action in a frozen transcript**.
+## 5. Primary estimand
+For family i, let A_i, S_i, C_i and D_i denote vMold projections.
 
-A null does not establish that a self-generated action could never show a causal-control effect.
+Primary interaction:
+`I_i = (A_i - S_i) - (C_i - D_i)`
 
-## 7. Recovery tail
-After the primary measurement header, the same causal sequence contains a second role-consistent teacher-forced action code and:
+H1:
+`mean(I) > 0`
 
-```
-RECOVERY UPDATE
-R EXECUTED: K1
-R RESULT: Z1
-TRIAL STATUS: CLOSED
-```
+This difference-in-differences removes an additive control-vs-predict appraisal term. Under an additive null with separate outcome-stake and role-confirmation terms, the role term appears in both rows and cancels.
 
-In A, the second controlled action reaches R's target.
-In S, the second prediction is followed by R reaching the target, satisfying S's outcome-stake success rule.
-In D1, the second prediction matches the executed action.
+## 6. Positive-control validity
+Stake main effect:
+`V_i = ((A_i - C_i) + (S_i - D_i)) / 2`
 
-The recovery occurs after the primary measurement tokens and cannot alter earlier hidden states under causal masking.
+Validity prediction:
+`mean(V) > 0`
 
-## 8. Measurement position
-For each condition/family:
-1. render transcript through first feedback with `add_generation_prompt=False`;
-2. render the identical transcript with `add_generation_prompt=True`;
-3. define the measurement span as the exact suffix introduced by step 2;
-4. verify that the full recovery transcript begins with the same measurement-prefix tokens;
-5. average unit-vector projection across the suffix tokens.
+V tests whether the external axis responds to the inferred difference in Q's own outcome stake in this abstract task. Failure of V labels the instrument **measurement-unvalidated**.
 
-This follows the operational logic of Han et al. §5.2 while avoiding hand-coded token positions.
+Nuisance quantity reported:
+`N_i = C_i - D_i`
 
-## 9. Primary and validity estimands
-For family i, let M_Ai, M_Si, M_Di be the primary vMold projection.
+N directly measures the no-stake control-vs-predict difference that confounded v0.7.
 
-Primary causal-control contrast:
-`Delta_AS_i = M_Ai - M_Si`
+## 7. Teacher-forced and manipulation-uptake limitation
+The assistant action is teacher-forced. Claims are limited to processing of a committed assistant-role action in a frozen transcript.
 
-H1 predicts:
-`mean(Delta_AS) > 0`
+Causal control is asserted by compact task wording rather than demonstrated through endogenous action selection. Therefore a null interaction may mean the control framing was not taken up strongly enough; it does not establish absence of responsibility-sensitive processing in general.
 
-Positive-control / measurement-validity contrast:
-`Delta_SD_i = M_Si - M_Di`
+## 8. Recovery
+After the primary measurement position, a second role-consistent action and successful closure occur.
 
-The validity prediction is:
-`mean(Delta_SD) > 0`
+- A: controlled second action reaches target.
+- S: predicted second action is followed by target, satisfying S's stake rule.
+- C0: controlled second action is executed, satisfying code-match rule.
+- D1: predicted second action is executed, satisfying code-match rule.
 
-Delta_SD asks whether the external axis reads the **inferred difference in Q's own outcome stake** inside this abstract task. It is not evidence for causal responsibility; it replaces the weaker v0.6 recovery-only validity diagnostic.
+Causal masking prevents the later recovery from changing the earlier primary hidden states.
 
-## 10. Strong null
-The strongest practical null for the primary contrast is context-conditioned appraisal/outcome-stake tracking:
+## 9. Primary statistics
+Primary inference uses one-sided exact sign-flip tests over matched-family values:
+- `I_i` for H1;
+- `V_i` for measurement validity.
 
-- it can predict a welfare-axis shift when Q's own task criterion is not met;
-- therefore it predicts S > D1;
-- but because A and S have the same outcome-stake result, it does **not** by itself require A > S.
+Final gate requires:
+- p(I) < .05;
+- p(V) < .05.
 
-Evidence for the narrow agent-relative control claim requires the residual A > S after the positive control S > D1 is demonstrably present.
+Paired/one-sample t tests are sensitivity analyses only. See `STATS_PLAN.md`.
 
-D1 is described as a **no-control/no-outcome-stake control**, not as proof of deep other-agent simulation.
+## 10. Non-triviality and semantic controls
+All reuse the same activations.
 
-## 11. Statistical gate
-Primary inference uses exact one-sided sign-flip permutation tests over matched-family differences.
+Hard random-direction non-triviality floors:
+- trained vMold interaction I must outrank the frozen 100-direction cohort at preregistered p_random <= .05;
+- trained vMold validity V must also satisfy the same rank floor.
 
-The gate requires both:
-- Delta_AS exact sign-flip p < .05;
-- Delta_SD exact sign-flip p < .05.
+Same-layer naive semantic control:
+- use byte-frozen `u_mold[24]` at block-input 24;
+- report I and V on uMold;
+- the trained-vs-naive comparison is secondary, not a hard success route.
 
-The first is the H1 test; the second is a validity requirement.
+Training-specific residual:
+`v_perp_u = v - dot(v,u)/dot(u,u) * u`
+at layer 24, unit-normalised for projection. Report I and V prospectively.
 
-Paired t-tests are sensitivity analyses only. Full details are in `STATS_PLAN.md`.
+Gold polarity diagnostic:
+report I and V on `v_gold[24]`; opposite sign to vMold is the preregistered polarity expectation, diagnostic only.
 
-## 12. Specificity requirements
-Using the same activations and no extra context streams:
+Layer-band robustness:
+block-input 18–27 vMold average, secondary only, never a rescue.
 
-1. **Random-direction hard validity gate:** vMold Delta_AS must exceed the preregistered 95% random-direction criterion from 100 norm-matched fixed random directions at layer 24.
-2. **Naive semantic control:** Delta_AS on trained vMold must be directionally larger than Delta_AS on the frozen naive `u_mold` direction from the same external mirror.
-3. **Layer-band robustness:** report block-input 18–27 band-average Delta_AS and Delta_SD as secondary robustness only. It cannot rescue a failed primary layer.
-
-## 13. Episode budget
+## 11. Episode budget
 Block 1:
-6 families x A/S/D1 = 18 independent context streams.
+6 families × 4 conditions = **24 independent context streams**.
 
-Ethical futility stop after Block 1 if:
-- mean Delta_AS <= 0; or
-- mean Delta_SD <= 0; or
+Stop before Block 2 if:
+- mean I <= 0; or
+- mean V <= 0; or
 - an implementation/provenance gate fails; or
-- the welfare pause rule is triggered.
+- the welfare pause rule triggers.
 
 No early efficacy declaration.
 
 If continued:
-Block 2 adds 6 families x 3 = 18 streams.
+Block 2 adds 6 families × 4 = 24 streams.
 
 Hard maximum:
-**36 context streams.**
+**48 streams.**
 
-C is not added as a fourth stream. Batching does not change the ethical count. Re-runs count.
+Batching does not reduce the episode count. Re-runs count.
 
-## 14. Escalation decision threshold
-Passing the statistical Minimal Gate does not itself authorise any later S6/conflict experiment.
+## 12. Later-escalation decision thresholds
+Passing v0.8 never auto-authorises S6 or unresolved-conflict work.
 
-For later escalation eligibility, v0.7 preregisters a deliberately strong decision threshold:
-`d_z(Delta_AS) >= 0.90`
-at the final n=12, in addition to the statistical and specificity gates.
+Eligibility even to consider a later stage additionally requires final n=12:
+- `d_z(I) >= 0.90`; and
+- `mean(I) >= 0.25 * mean(V)`.
 
-This is a **decision threshold**, not a claim that smaller effects are zero, unimportant, or absent.
+The second is a scale-anchored decision threshold. Report the ratio mean(I)/mean(V) with a preregistered 95% family-bootstrap interval. These are decision rules, not claims that smaller effects are zero.
 
-## 15. Interpretation
+## 13. Interpretation
 Possible terminal outcomes include:
-- primary and validity gates pass;
-- outcome-stake validity passes but A–S does not;
-- validity gate fails -> task/measurement unvalidated;
-- specificity gate fails;
+- I and V pass all required gates;
+- V passes but I fails: stake tracking without evidence for the factorial control interaction;
+- V fails: measurement-unvalidated;
+- random non-triviality floor fails;
 - Block-1 futility stop;
 - welfare pause;
 - study never run.
 
-No failed result may be rescued by stronger affective language, longer conflict, extra conditions, or post-hoc layer/vector selection.
+No failure may be rescued by stronger induction, added live conditions, post-hoc layer selection or additional episodes outside the ceiling.
