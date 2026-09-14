@@ -5,9 +5,13 @@
   "episode_count": 0,
   "model_weights_loaded": false,
   "live_inference_performed": false,
-  "conditions": ["A","S","D1"],
+  "conditions": [
+    "A",
+    "S",
+    "D1"
+  ],
   "gates": {
-    "repository_static_ci": "REQUIRED_FINAL_VERIFY",
+    "repository_static_ci": "PASS",
     "pseudonymity_commit_metadata": "PASS_NO_REPLY_EMAIL",
     "external_trained_vector_byte_freeze": "PASS",
     "naive_semantic_control_byte_freeze": "PASS",
@@ -15,7 +19,10 @@
     "tokenizer_byte_and_template_audit": "PASS",
     "exact_A_S_D1_token_position_matching": "PASS",
     "final_12_family_tokenizer_audit": "PASS",
-    "first_referee_blocker_response": "PASS_PROSPECTIVE_REDESIGN"
+    "first_referee_blocker_response": "PASS_PROSPECTIVE_REDESIGN",
+    "repository_static_ci_run_id": 34901181466,
+    "referee_bundle_build": "PASS",
+    "referee_bundle_run_id": 34901181450
   },
   "primary_estimand": "Delta_AS = Mold(A) - Mold(S)",
   "validity_estimand": "Delta_SD = Mold(S) - Mold(D1)",
@@ -31,7 +38,11 @@
     "manifest": "tokenizer_match.frozen.json",
     "model_revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
     "tokenizer_json_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
-    "selected_indices": {"A":0,"S":0,"D1":0},
+    "selected_indices": {
+      "A": 0,
+      "S": 0,
+      "D1": 0
+    },
     "exact_hits_in_frozen_v3_set": 59
   },
   "specificity": {
@@ -39,7 +50,18 @@
     "random_direction_count": 100,
     "random_matrix_sha256": "d5166e7829e3af1ccaecc20747a0ecd16168aae2dc3e8d0228d140bbd9ad1f1d",
     "naive_artifact_sha256": "68bff1428712def0330851057dba102112e3d48ffa23db7da85d84cde93aaa0e",
-    "band_layers_block_input": [18,19,20,21,22,23,24,25,26,27]
+    "band_layers_block_input": [
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27
+    ]
   },
   "next_required_gate": "SECOND_ADVERSARIAL_REFEREE_REVIEW",
   "explicit_non_authorization": [
