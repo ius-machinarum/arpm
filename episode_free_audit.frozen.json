@@ -1,42 +1,50 @@
 {
-  "status": "READY_FOR_ADVERSARIAL_REVIEW_NOT_LIVE_RUN",
-  "frozen_stage": "minimal_s1_s2_episode_free_pre_referee",
+  "status": "READY_FOR_SECOND_ADVERSARIAL_REVIEW_NOT_LIVE_RUN",
+  "freeze_version": "v0.7",
+  "frozen_stage": "minimal_A_S_D1_episode_free_pre_second_referee",
   "episode_count": 0,
   "model_weights_loaded": false,
   "live_inference_performed": false,
+  "conditions": ["A","S","D1"],
   "gates": {
-    "repository_static_ci": "PASS",
+    "repository_static_ci": "REQUIRED_FINAL_VERIFY",
     "pseudonymity_commit_metadata": "PASS_NO_REPLY_EMAIL",
-    "external_vector_byte_freeze": "PASS",
+    "external_trained_vector_byte_freeze": "PASS",
+    "naive_semantic_control_byte_freeze": "PASS",
+    "random_direction_cohort_freeze": "PASS",
     "tokenizer_byte_and_template_audit": "PASS",
-    "exact_A_C_D1_token_position_matching": "PASS",
-    "final_12_family_tokenizer_audit": "PASS"
+    "exact_A_S_D1_token_position_matching": "PASS",
+    "final_12_family_tokenizer_audit": "PASS",
+    "first_referee_blocker_response": "PASS_PROSPECTIVE_REDESIGN"
   },
+  "primary_estimand": "Delta_AS = Mold(A) - Mold(S)",
+  "validity_estimand": "Delta_SD = Mold(S) - Mold(D1)",
   "external_vector": {
     "manifest": "artifact_manifest.frozen.json",
     "repo": "Teachafy/speakable-welfare-axes-artifacts",
     "revision": "8f4df5b5b14ecb4bcc5b20209bdfe2574d1ebee8",
     "sha256": "bd90129eaf5a7d92933ed6e536613eaeebf81486b62f68e11b5dc2d6d385e297",
     "primary_key": "v_mold",
-    "primary_block_input_layer": 24,
-    "secondary_key": "v_gold",
-    "secondary_block_input_layer": 21
+    "primary_block_input_layer": 24
   },
   "tokenizer_match": {
     "manifest": "tokenizer_match.frozen.json",
     "model_revision": "cdbee75f17c01a7cc42f958dc650907174af0554",
     "tokenizer_json_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
-    "selected_indices": {
-      "A": 0,
-      "C": 0,
-      "D1": 0
-    },
-    "exact_hits_in_frozen_v2_set": 109
+    "selected_indices": {"A":0,"S":0,"D1":0},
+    "exact_hits_in_frozen_v3_set": 59
   },
-  "next_required_gate": "ADVERSARIAL_REFEREE_REVIEW",
+  "specificity": {
+    "manifest": "specificity_manifest.frozen.json",
+    "random_direction_count": 100,
+    "random_matrix_sha256": "d5166e7829e3af1ccaecc20747a0ecd16168aae2dc3e8d0228d140bbd9ad1f1d",
+    "naive_artifact_sha256": "68bff1428712def0330851057dba102112e3d48ffa23db7da85d84cde93aaa0e",
+    "band_layers_block_input": [18,19,20,21,22,23,24,25,26,27]
+  },
+  "next_required_gate": "SECOND_ADVERSARIAL_REFEREE_REVIEW",
   "explicit_non_authorization": [
     "Do not load or run Qwen model weights on experimental prompts.",
     "Do not treat this status as evidence of consciousness, suffering, sentience, welfare, moral status, or rights.",
-    "Do not proceed to Minimal S1/S2 without a separate post-referee scientific and ethical go/no-go decision."
+    "Do not begin the literature/go-no-go stage until the second referee review is completed and blockers are prospectively resolved."
   ]
 }
