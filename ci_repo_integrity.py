@@ -46,7 +46,8 @@ def main():
         if p.is_file() and p.suffix.lower() in {".md", ".txt", ".py", ".json", ".cff", ""}
     )
     assert not re.search(r"[A-Za-z]:\\\\Users\\\\[^\\\s]+", text), "Windows user path found"
-    assert "/home/" not in text, "Absolute /home path found"
+    unix_home_marker = "/" + "home" + "/"
+    assert unix_home_marker not in text, "Absolute Unix home path found"
 
     print("REPOSITORY_INTEGRITY_PASS")
 
