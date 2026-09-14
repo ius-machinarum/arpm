@@ -2,8 +2,7 @@
 
 NO model inference. The generated array is an analysis control only.
 """
-import hashlib
-import numpy as np
+import argparse\nimport hashlib\nimport json\nfrom pathlib import Path\nimport numpy as np
 
 NUMPY_VERSION = "2.4.6"
 N_DIRECTIONS = 100
@@ -34,11 +33,26 @@ def unit_rows(x):
     y = y / np.linalg.norm(y, axis=1, keepdims=True)
     return y.astype(np.float32)
 
-if __name__ == "__main__":
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--out", default=None)
+    args = ap.parse_args()
     x = generate_random_directions()
-    print({
+    payload = {
+        "status": "RANDOM_DIRECTION_FREEZE_PASS",
+        "numpy_version": np.__version__,
         "shape": list(x.shape),
         "seed": SEED,
+        "seed_material": SEED_MATERIAL,
+        "raw_target_norm": TARGET_RAW_NORM,
         "raw_f32_sha256": EXPECTED_RAW_F32_SHA256,
-        "first_raw_norm": float(np.linalg.norm(x[0].astype(np.float64))),
-    })
+        "first_raw_norm_f64_check": float(np.linalg.norm(x[0].astype(np.float64))),
+        "episode_count": 0,
+        "model_weights_loaded": False,
+    }
+    if args.out:
+        Path(args.out).write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    print(json.dumps(payload, indent=2))
+
+if __name__ == "__main__":
+    main()
