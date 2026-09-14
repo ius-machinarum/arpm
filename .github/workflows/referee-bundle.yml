@@ -66,9 +66,9 @@ jobs:
           cp REFEREE_PACKET.md artifact_manifest.frozen.json tokenizer_match.frozen.json episode_free_audit.frozen.json referee_bundle/
           cp PROTOCOL.md ETHICS_CHARTER.md STATS_PLAN.md PROMPT_MATCHING.md VECTOR_PROVENANCE.md TOKENIZER_CALIBRATION_LOG.md SOURCES.md STATUS.md FREEZE_STATUS.md referee_bundle/repo/
           cp role_clause_variants.py prompts_minimal_gate.py search_token_matched_roles.py audit_prompts_tokenizer_only.py tokenizer_snapshot_audit.py inspect_vector_artifact.py freeze_vector_artifact.py run_episode_free_audit.py acquire_passive_artifacts.py referee_bundle/repo/
-          cp test_prompts_static.py test_episode_free_static.py test_freeze_static.py test_acquisition_static.py referee_bundle/repo/
+          cp test_prompts_static.py test_episode_free_static.py test_freeze_static.py test_acquisition_static.py artifact_manifest.template.json referee_bundle/repo/
           cp passive_inputs/tokenizer_only/tokenizer.json passive_inputs/tokenizer_only/tokenizer_config.json passive_inputs/tokenizer_only/vocab.json passive_inputs/tokenizer_only/merges.txt referee_bundle/tokenizer/
-          cp passive_inputs/vector/vectors_step95_bal.pt referee_bundle/vector/
+          cp passive_inputs/vector/vectors_step95_bal.pt passive_inputs/vector/vectors_naive_faithful_pc5000.pt referee_bundle/vector/
           cp passive_inputs/passive_acquisition_manifest.json referee_bundle/
           printf '%s\n' \
             'ARPM Minimal S1/S2 adversarial referee bundle.' \
@@ -92,7 +92,7 @@ jobs:
       - name: Upload referee bundle
         uses: actions/upload-artifact@v4
         with:
-          name: arpm-v0.6-referee-bundle
+          name: arpm-v0.7-referee-bundle
           if-no-files-found: error
           retention-days: 14
           path: referee_bundle/**
