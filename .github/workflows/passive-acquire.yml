@@ -10,7 +10,7 @@ on:
       - "role_clause_variants.py"
       - "prompts_minimal_gate.py"
       - "search_token_matched_roles.py"
-      - "audit_prompts_tokenizer_only.py"
+      - "audit_prompts_tokenizer_only.py"\n      - "specificity_controls.py"
   workflow_dispatch:
 
 permissions:
