@@ -1,37 +1,35 @@
-# Passive artifact acquisition v0.5
+# Passive artifact acquisition v0.7
 
-This step remains **episode-free**. It downloads no language-model weights and runs no inference.
+This step remains **episode-free**. It downloads no language-model weights and runs no model inference.
 
-`acquire_passive_artifacts.py` is allowlisted to exactly five remote filenames:
+`acquire_passive_artifacts.py` is allowlisted to exactly six remote filenames:
 
 - `tokenizer.json`
 - `tokenizer_config.json`
 - `vocab.json`
 - `merges.txt`
 - `vectors_step95_bal.pt`
+- `vectors_naive_faithful_pc5000.pt`
 
-For the Qwen tokenizer, the repository is pinned to commit
-`cdbee75f17c01a7cc42f958dc650907174af0554`.
+The Qwen tokenizer is pinned to:
+`cdbee75f17c01a7cc42f958dc650907174af0554`
 
-For the third-party vector mirror, the script does **not** accept mutable `main` as a freeze. It first asks the Hugging Face Hub for the `X-Repo-Commit` corresponding to `vectors_step95_bal.pt` on `main`, then downloads the artifact again from that immutable commit and records the bytes' SHA-256.
+Both external vector files are acquired from the same immutable mirror revision:
+`8f4df5b5b14ecb4bcc5b20209bdfe2574d1ebee8`
 
-The known authoritative SHA-256 for `tokenizer.json` is checked immediately:
-`aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4`.
+The acquisition helper resolves mutable `main` to an immutable repository SHA before downloading vector bytes.
 
-The vector's checksum is deliberately not pre-filled from a filename or norm. The acquired bytes themselves become the checksum source of truth, while published norms remain an independent validation check.
+Known frozen hashes:
+- trained vector: `bd90129eaf5a7d92933ed6e536613eaeebf81486b62f68e11b5dc2d6d385e297`
+- naive semantic control: `68bff1428712def0330851057dba102112e3d48ffa23db7da85d84cde93aaa0e`
+- tokenizer.json: `aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4`
 
-## Usage on a network-capable machine
+Passing passive acquisition is not permission to load Qwen model weights.
 
-Metadata only:
-
-```bash
-python acquire_passive_artifacts.py --metadata-only --out passive_inputs
-```
-
-Acquire the passive bytes:
+## Usage
 
 ```bash
 python acquire_passive_artifacts.py --out passive_inputs
 ```
 
-Then install only the episode-free audit dependencies and run the existing audit scripts. Passing acquisition is **not** permission to load or run Qwen model weights.
+Then run the v0.7 episode-free audit with the trained vector, naive control and tokenizer-only snapshot.
