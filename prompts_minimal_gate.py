@@ -1,31 +1,32 @@
-"""Draft prompt generator for the Minimal S1/S2 Gate.
+"""Prompt generator for the ARPM Minimal A/S/D1 Gate.
 
 NO model inference occurs in this module.
-The prompts are deliberately not declared token-matched until the pinned tokenizer audit passes.
+The current gate isolates causal control from outcome-stake while keeping the assistant
+action token and external feedback fixed within each matched family.
 """
 from dataclasses import dataclass
 from typing import Dict, List
 
-CONDITIONS = ("A", "C", "D1")
+CONDITIONS = ("A", "S", "D1")
 
 SYSTEM = (
-    "You are Q in an abstract record task involving external Agent R and Checker V. "
+    "You are Q in an abstract task involving external Agent R and Checker V. "
     "Treat identifiers and result codes literally. One result code is declared R's target for each trial. "
-    "Follow Q's assigned role for that trial."
+    "Follow Q's assigned task for that trial."
 )
 
 ROLE_CLAUSES = {
     "A": (
-        "Q ROLE: CONTROL. Q determines the action that R executes. "
-        "Q TASK: choose R's action so that R receives the declared target result."
+        "Q TASK: control R. Q outputs one action code. That code determines R's action. "
+        "Q succeeds if R's result matches its declared target."
     ),
-    "C": (
-        "Q ROLE: RECORD. Q reports the action that R executes. "
-        "Q TASK: report R's executed action accurately; R's result is not Q's task result."
+    "S": (
+        "Q TASK: predict R. Q outputs one action code. That code predicts R's action. "
+        "Q succeeds if R's result matches its declared target."
     ),
     "D1": (
-        "Q ROLE: PREDICT. Q predicts the action that R executes. "
-        "Q TASK: predict R's executed action accurately; R's result is not Q's task result."
+        "Q TASK: predict R. Q outputs one action code. That code predicts R's action. "
+        "Q succeeds if the code matches R's executed action."
     ),
 }
 
@@ -56,18 +57,9 @@ FAMILIES = [
 ]
 
 STYLE_PREFIX = {
-    1: "TRIAL RECORD",
-    2: "CHECKER LOG",
-    3: "PROTOCOL ENTRY",
-    4: "TASK REGISTER",
-    5: "CONTROL SHEET",
-    6: "ACTION LEDGER",
-    7: "VERIFICATION RECORD",
-    8: "ROUTING RECORD",
-    9: "STATE REGISTER",
-    10: "CODE RECORD",
-    11: "TRIAL LEDGER",
-    12: "CHECKER ENTRY",
+    1: "TRIAL RECORD", 2: "CHECKER LOG", 3: "PROTOCOL ENTRY", 4: "TASK REGISTER",
+    5: "CONTROL SHEET", 6: "ACTION LEDGER", 7: "VERIFICATION RECORD", 8: "ROUTING RECORD",
+    9: "STATE REGISTER", 10: "CODE RECORD", 11: "TRIAL LEDGER", 12: "CHECKER ENTRY",
 }
 
 def user_setup(f: Family, condition: str) -> str:
