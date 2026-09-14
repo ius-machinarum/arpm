@@ -120,6 +120,17 @@ Please attack whether this is a faithful enough operational replication of Han's
 
 ---
 
+
+
+### Model/vector compatibility clarification
+
+The current frozen candidate model is **Qwen/Qwen3-4B-Instruct-2507**, not the earlier Qwen3-8B pilot organism from a superseded design stage.
+
+The frozen vector tensors have hidden dimension **2560**, matching Qwen3-4B-Instruct-2507. The old 8B pilot path was abandoned when the programme pivoted to the independently available 4B welfare-axis artifact. No 8B tokenizer or 4096-dimensional activation projection is part of the current v0.6 instrument.
+
+Please verify this directly from the included tokenizer files, frozen manifests and `vectors_step95_bal.pt`.
+
+
 ## 6. Frozen external welfare direction
 
 Artifact:
@@ -172,6 +183,19 @@ The semantic key mapping was **not inferred by picking tensors that matched the 
 Please attack whether the third-party reproduction -> independent-methodology -> public-mirror provenance is strong enough for a confirmatory external axis, or whether this must remain exploratory.
 
 ---
+
+
+
+### Important layer-provenance clarification before referee ruling
+
+The current study **does not claim that layers 24/21 are Han et al.'s selected steering layers**.
+
+Han et al.'s paper and our third-party artifact/method source use different layer references for different analyses. The independent Speakable Welfare methodology explicitly states that its treatment layers are read from the artifact metadata as **Gold 21 / Mold 24 in block-input convention**, and separately warns about an off-by-one Jacobian-lens source-layer convention. By contrast, Han et al.'s own steering setup selects its \(\ell^*\) independently and Appendix D sweeps layers for steering robustness.
+
+For this ARPM Minimal Gate, the intended use is **projection/readout of the frozen third-party step-95 artifact**, not intervention/steering. Therefore 24/21 currently come from the artifact's explicit `layer_mold` / `layer_gold` metadata plus the independent Speakable Welfare provenance, not from a claim that these equal Han's steering layers.
+
+This distinction is now an explicit referee question: **is artifact-selected 24/21 a defensible confirmatory projection layer for our use, or should the primary readout instead be redefined prospectively using Han's own tracking-layer convention / an independently justified layer?** If the answer is no, treat this as a BLOCKER. No live inference will occur until it is resolved.
+
 
 ## 7. Primary estimands
 
