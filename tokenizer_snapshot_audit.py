@@ -41,7 +41,8 @@ def main():
         raise AssertionError('chat_template missing')
     if '<think>' in template or '</think>' in template or 'enable_thinking' in template:
         raise AssertionError('2507 tokenizer template unexpectedly contains thinking machinery')
-    if "<|im_start|>assistant\n" not in template or 'add_generation_prompt' not in template:
+    generation_marker = "<|im_start|>assistant" + "\\n"
+    if generation_marker not in template or 'add_generation_prompt' not in template:
         raise AssertionError('expected assistant generation-prompt clause not found')
     payload={
       'status':'TOKENIZER_BYTES_PASS_NO_MODEL_WEIGHTS',
