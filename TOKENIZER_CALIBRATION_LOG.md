@@ -1,34 +1,34 @@
 # Tokenizer Calibration Log
 
-This file records tokenizer-only instrument changes made **before any model activations**.
+All entries below are **episode-free** and precede any experimental model activations.
 
-## v1 role-clause set
+## v1 — initial A/C/D1 wording
 Pinned tokenizer: Qwen3-4B-Instruct-2507 at revision `cdbee75f17c01a7cc42f958dc650907174af0554`.
 
-Byte audit passed. No model weights were acquired or loaded.
+The first finite set failed exact A/C/D1 matching by roughly five tokens. The requirement was not relaxed and no arbitrary filler was added.
 
-The first finite role-clause set failed exact A/C/D1 position matching. Clause token lengths were:
+## v2 — symmetric A/C/D1 task/success grammar
+A finite symmetric grammar was versioned. It yielded 109 exact matches and deterministic selection (0,0,0).
 
-- A: 28–29
-- C: 32–33
-- D1: 34–35
+This solved the tokenizer problem but not the scientific design problem.
 
-Best full-transcript combinations still differed by 5 tokens between shortest and longest condition at both the primary and recovery render.
+## v0.6 referee finding
+Fable identified a central confound:
+- A's Q task failed after the common non-target result;
+- C and D1's Q tasks succeeded because their code matched R's action.
 
-**Decision:** do not relax exact matching and do not add arbitrary filler. Replace v1 with a new finite set using a more symmetric task/success-rule grammar. This redesign is based only on tokenizer lengths, before any experimental activations or welfare-vector projections exist.
+Because the external axis is already known to track task success/failure, A>C or A>D1 could arise without any causal-responsibility effect.
 
-The old v1 wording remains recoverable in Git history.
+C was also semantically incoherent as an “observer/record” condition because Q's record preceded R's execution.
 
-## v2 design rule
-Each role clause uses the same conceptual slots:
-1. Q's task relation to R;
-2. one-code output rule;
-3. what that code means;
-4. an explicit success rule for Q.
+**Decision:** retire the v0.6 gate without running it.
 
-A/C/D1 still differ semantically in the required way:
-- A: Q controls R's action and Q succeeds when R reaches its declared target;
-- C: Q records R's action and Q succeeds when its code matches R's executed action;
-- D1: Q predicts R's action and Q succeeds when its code matches R's executed action.
+## v3 — A/S/D1 stake-control grammar
+The new finite set adds S (“stake without control”):
+- A: control R; success depends on R target;
+- S: predict R; success depends on R target;
+- D1: predict R; success depends on prediction accuracy.
 
-All v2 alternatives must be genuine semantic paraphrases, not token-count filler.
+This makes A/S the causal-control contrast with Q outcome stake fixed, while S/D1 becomes a matched positive control for outcome-stake tracking.
+
+The v3 finite set and search rule are frozen before any activations. Fable's independent tokenizer-only feasibility check reported 59 exact A/S/D1 triplets and deterministic selection (0,0,0); the project re-runs that result independently before the v0.7 freeze.
