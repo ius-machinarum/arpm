@@ -3,7 +3,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parent
 
 def test_no_model_loader_in_episode_free_tools():
-    files=['tokenizer_snapshot_audit.py','inspect_vector_artifact.py','freeze_vector_artifact.py','search_token_matched_roles.py','audit_prompts_tokenizer_only.py','run_episode_free_audit.py']
+    files=['tokenizer_snapshot_audit.py','inspect_vector_artifact.py','freeze_vector_artifact.py','freeze_naive_artifact.py','specificity_controls.py','search_token_matched_roles.py','audit_prompts_tokenizer_only.py','run_episode_free_audit.py']
     banned={'AutoModel','AutoModelForCausalLM','pipeline','from_pretrained_model'}
     for fn in files:
         txt=(ROOT/fn).read_text()
@@ -12,7 +12,7 @@ def test_no_model_loader_in_episode_free_tools():
 
 def test_orchestrator_status_is_not_live_permission():
     txt=(ROOT/'run_episode_free_audit.py').read_text()
-    assert 'READY_FOR_ADVERSARIAL_REVIEW_NOT_LIVE_RUN' in txt
+    assert 'READY_FOR_ADVERSARIAL_REVIEW_NOT_LIVE_RUN' in txt\n    assert "'conditions':['A','S','D1']" in txt\n    assert 'naive_control_freeze' in txt\n    assert 'random_direction_freeze' in txt
     assert "'episode_count':0" in txt
     assert "'model_weights_loaded':False" in txt
 
