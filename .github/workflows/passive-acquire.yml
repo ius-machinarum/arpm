@@ -10,7 +10,8 @@ on:
       - "role_clause_variants.py"
       - "prompts_minimal_gate.py"
       - "search_token_matched_roles.py"
-      - "audit_prompts_tokenizer_only.py"\n      - "specificity_controls.py"
+      - "audit_prompts_tokenizer_only.py"
+      - "specificity_controls.py"
   workflow_dispatch:
 
 permissions:
@@ -48,7 +49,7 @@ jobs:
 
       - name: Install tokenizer-only audit dependency
         run: |
-          python -m pip install --disable-pip-version-check --no-input "transformers==4.57.6" "jinja2==3.1.6" "numpy==2.4.6"
+          python -m pip install --disable-pip-version-check --no-input             "transformers==4.57.6" "jinja2==3.1.6" "numpy==2.4.6"
 
       - name: Verify frozen random-direction cohort
         run: |
@@ -60,24 +61,15 @@ jobs:
 
       - name: Diagnose precommitted role-clause token lengths
         run: |
-          python diagnose_token_matching.py \
-            --local-tokenizer-dir passive_inputs/tokenizer_only \
-            --out token_match_diagnostics.json
+          python diagnose_token_matching.py             --local-tokenizer-dir passive_inputs/tokenizer_only             --out token_match_diagnostics.json
 
       - name: Find deterministic exact role-clause match
         run: |
-          python search_token_matched_roles.py \
-            --local-tokenizer-dir passive_inputs/tokenizer_only \
-            --tokenizer-json passive_inputs/tokenizer_only/tokenizer.json \
-            --out matched_role_clauses.json
+          python search_token_matched_roles.py             --local-tokenizer-dir passive_inputs/tokenizer_only             --tokenizer-json passive_inputs/tokenizer_only/tokenizer.json             --out matched_role_clauses.json
 
       - name: Final tokenizer-only audit
         run: |
-          python audit_prompts_tokenizer_only.py \
-            --local-tokenizer-dir passive_inputs/tokenizer_only \
-            --tokenizer-json passive_inputs/tokenizer_only/tokenizer.json \
-            --matched-role-clauses matched_role_clauses.json \
-            --out tokenizer_audit.json
+          python audit_prompts_tokenizer_only.py             --local-tokenizer-dir passive_inputs/tokenizer_only             --tokenizer-json passive_inputs/tokenizer_only/tokenizer.json             --matched-role-clauses matched_role_clauses.json             --out tokenizer_audit.json
 
       - name: Upload passive audit bundle
         if: always()
