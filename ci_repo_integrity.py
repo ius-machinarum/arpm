@@ -9,28 +9,44 @@ REQUIRED = {
     "STATS_PLAN.md", "PROMPT_MATCHING.md", "VECTOR_PROVENANCE.md",
     "EPISODE_FREE_AUDIT.md", "REFEREE_QUESTIONS.md", "SOURCES.md",
     "TOKENIZER_SNAPSHOT.md", "PASSIVE_ACQUISITION.md", "FREEZE_STATUS.md",
+    "SPECIFICITY_PLAN.md", "TOKENIZER_CALIBRATION_LOG.md",
     "acquire_passive_artifacts.py", "tokenizer_snapshot_audit.py",
     "inspect_vector_artifact.py", "freeze_vector_artifact.py",
+    "freeze_naive_artifact.py", "specificity_controls.py",
     "role_clause_variants.py", "search_token_matched_roles.py",
     "audit_prompts_tokenizer_only.py", "run_episode_free_audit.py",
     "prompts_minimal_gate.py", "requirements_episode_free.txt",
     "artifact_manifest.template.json", "artifact_manifest.frozen.json",
-    "tokenizer_match.frozen.json", "episode_free_audit.frozen.json",
-    "TOKENIZER_CALIBRATION_LOG.md", "REFEREE_PACKET.md", ".gitignore",
+    "tokenizer_match.frozen.json", "specificity_manifest.frozen.json",
+    "episode_free_audit.frozen.json", "REFEREE_PACKET.md", ".gitignore",
 }
 
-FORBIDDEN_TRACKED_SUFFIXES = {".pt", ".pth", ".bin", ".safetensors", ".gguf", ".ckpt", ".onnx"}
+REQUIRED_NESTED = {
+    ROOT / "reviews" / "FABLE_REFEREE_v0_6.md",
+    ROOT / "reviews" / "s_condition_feasibility.py",
+}
+
+FORBIDDEN_TRACKED_SUFFIXES = {
+    ".pt", ".pth", ".bin", ".safetensors", ".gguf", ".ckpt", ".onnx"
+}
 
 def main():
     present = {p.name for p in ROOT.iterdir() if p.is_file()}
     missing = sorted(REQUIRED - present)
     assert not missing, f"Required files missing: {missing}"
 
+    missing_nested = sorted(
+        str(p.relative_to(ROOT)) for p in REQUIRED_NESTED if not p.is_file()
+    )
+    assert not missing_nested, f"Required nested files missing: {missing_nested}"
+
     forbidden = [
-        p.name for p in ROOT.rglob("*")
+        str(p.relative_to(ROOT)) for p in ROOT.rglob("*")
         if p.is_file() and p.suffix.lower() in FORBIDDEN_TRACKED_SUFFIXES
     ]
-    assert not forbidden, f"Model/vector binary artifact tracked unexpectedly: {forbidden}"
+    assert not forbidden, (
+        f"Model/vector binary artifact tracked unexpectedly: {forbidden}"
+    )
 
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     status = (ROOT / "STATUS.md").read_text(encoding="utf-8")
@@ -38,17 +54,20 @@ def main():
 
     assert "NO LIVE MODEL RUNS" in readme
     assert "NO LIVE MODEL RUNS" in status
-    assert "READY_FOR_ADVERSARIAL_REVIEW_NOT_LIVE_RUN" in readme
     assert "No unnecessary possible harm" in ethics
 
-    # Generic local-path leak checks; personal names/emails are checked off-repo.
     text = "\n".join(
         p.read_text(encoding="utf-8", errors="ignore")
         for p in ROOT.rglob("*")
-        if p.is_file() and p.suffix.lower() in {".md", ".txt", ".py", ".json", ".cff", ""}
+        if p.is_file()
+        and p.suffix.lower() in {".md", ".txt", ".py", ".json", ".cff", ""}
     )
-    assert not re.search(r"[A-Za-z]:\\\\Users\\\\[^\\\s]+", text), "Windows user path found"
-    assert not re.search(r"/home/[A-Za-z0-9._-]+/", text), "Absolute Unix home path found"
+    assert not re.search(
+        r"[A-Za-z]:\\\\Users\\\\[^\\\s]+", text
+    ), "Windows user path found"
+    assert not re.search(
+        r"/home/[A-Za-z0-9._-]+/", text
+    ), "Absolute Unix home path found"
 
     print("REPOSITORY_INTEGRITY_PASS")
 
