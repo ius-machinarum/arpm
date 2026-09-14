@@ -1,23 +1,40 @@
 # Project status
 
-**Current status: v0.8 FACTORIAL REDESIGN — EPISODE-FREE REFREEZE IN PROGRESS.**
+**Current status: READY_FOR_THIRD_ADVERSARIAL_REVIEW_NOT_LIVE_RUN.**
 
 **NO LIVE MODEL RUNS PERMITTED.**
 
-The v0.7 A/S/D1 design is retired after second-round adversarial review found a remaining role-confirmation confound.
+v0.6 and v0.7 were retired before live execution after adversarial review found interpretability blockers.
 
-v0.8 completes the 2x2:
+v0.8 is a prospectively frozen 2x2:
 - A = control + outcome stake;
 - S = predict + outcome stake;
 - C0 = control + no outcome stake;
 - D1 = predict + no outcome stake.
 
-Primary candidate estimand:
+Primary:
 `I=(A-S)-(C0-D1)`.
 
-Validity candidate:
+Validity:
 `V=((A-C0)+(S-D1))/2`.
 
-No live activations have been collected. Ethical episode count remains **0**.
+Episode-free technical gates are complete:
+- trained vector byte freeze — PASS;
+- same-layer naive uMold[24] freeze — PASS;
+- v_perp_u geometry freeze — PASS;
+- random cohort freeze — PASS;
+- tokenizer/chat-template byte audit — PASS;
+- exact A/S/C0/D1 matching — PASS (128 hits; deterministic selection 0,0,0,0);
+- final 12-family tokenizer audit — PASS;
+- full passive audit run 34903275233 — PASS.
 
-The current work is restricted to tokenizer/artifact/CI checks. Only after a successful v0.8 episode-free freeze will a third adversarial referee bundle be considered. Referee acceptance still will not authorise live inference; a fresh literature check and separate human go/no-go remain mandatory.
+Experimental model weights have not been loaded and live episode count remains **0**.
+
+## Next gate
+One third-round adversarial referee review of the self-verifying v0.8 bundle.
+
+After referee blockers are resolved:
+1. fresh literature check;
+2. separate human scientific + ethical go/no-go.
+
+Referee acceptance alone does not authorise live inference.
