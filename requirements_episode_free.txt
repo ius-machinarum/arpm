@@ -3,3 +3,4 @@ transformers==4.57.6
 # torch is required only to safe-load the small .pt vector artifact, never the language-model weights.
 torch==2.10.0
 jinja2==3.1.6
+numpy==2.4.6
