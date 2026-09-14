@@ -1,0 +1,20 @@
+{
+  "status": "SPECIFICITY_GEOMETRY_PASS",
+  "freeze_version": "v0.8",
+  "layer": 24,
+  "formula": "v_perp_u = v - dot(v,u)/dot(u,u) * u",
+  "analysis_normalization": "unit-normalise v_perp_u before projection",
+  "geometry": {
+    "v_norm": 19.339997178365763,
+    "u_norm": 8.005262373512599,
+    "cos_v_u": 0.6748857959122747,
+    "v_perp_u_norm": 14.271413124628012,
+    "v_perp_u_norm_ratio": 0.7379221926977526,
+    "cos_v_gold_same_layer": -0.8374700786427502
+  },
+  "v_perp_u_raw_f32_sha256": "e07ae24cfc53d15ed8e69899d822435f0b95453dc1bfb089a1bf91391e0f7713",
+  "trained_sha256": "bd90129eaf5a7d92933ed6e536613eaeebf81486b62f68e11b5dc2d6d385e297",
+  "naive_sha256": "68bff1428712def0330851057dba102112e3d48ffa23db7da85d84cde93aaa0e",
+  "episode_count": 0,
+  "model_weights_loaded": false
+}
