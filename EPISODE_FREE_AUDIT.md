@@ -1,35 +1,48 @@
-# Episode-free completion path (v0.4)
+# Episode-free completion path v0.7
 
-This is the only supported route from DRAFT to READY FOR ADVERSARIAL REVIEW.
-It must be run **without model weight files present**.
+This is the supported route from redesign to adversarial re-review. It must run **without language-model weight files present**.
 
 ## Inputs
-1. `vectors_step95_bal.pt` from a frozen repository revision.
-2. A tokenizer-only snapshot of `Qwen/Qwen3-4B-Instruct-2507` at revision `cdbee75f17c01a7cc42f958dc650907174af0554` containing at least `tokenizer.json` and `tokenizer_config.json`.
-3. Explicit Gold/Mold object paths (and indices, if needed) established from artifact/source structure, not selected by whichever norm gives the desired answer.
+1. frozen trained artifact `vectors_step95_bal.pt`;
+2. frozen naive-control artifact `vectors_naive_faithful_pc5000.pt`;
+3. tokenizer-only snapshot of `Qwen/Qwen3-4B-Instruct-2507` at revision `cdbee75f17c01a7cc42f958dc650907174af0554`;
+4. the committed finite A/S/D1 variant set;
+5. the committed deterministic random-direction specification.
 
 ## Environment
-Use `requirements_episode_free.txt`. The tokenizer stack is pinned because chat-template/tokenization behavior is part of the instrument.
+Use `requirements_episode_free.txt`.
 
 ## One-command audit
+
 ```bash
 python run_episode_free_audit.py \
   --artifact /path/vectors_step95_bal.pt \
-  --artifact-repo <repo> \
-  --artifact-revision <commit> \
-  --mold-key <explicit.path> [--mold-index N] \
-  --gold-key <explicit.path> [--gold-index N] \
+  --naive-artifact /path/vectors_naive_faithful_pc5000.pt \
+  --artifact-repo Teachafy/speakable-welfare-axes-artifacts \
+  --artifact-revision 8f4df5b5b14ecb4bcc5b20209bdfe2574d1ebee8 \
   --tokenizer-dir /path/qwen3-4b-tokenizer-only
 ```
 
-The script produces `episode_free_audit/episode_free_audit.json` only if all gates pass.
+The audit verifies:
+- tokenizer bytes/template and absence of model weights;
+- trained vector bytes, mapping and norms;
+- naive u_mold bytes, explicit mapping and artifact-selected layer;
+- deterministic 100-direction random control hash;
+- exact A/S/D1 tokenizer matching;
+- final 12-family position audit.
 
-`READY_FOR_ADVERSARIAL_REVIEW_NOT_LIVE_RUN` means exactly that. It is **not** permission to load Qwen model weights or conduct the Minimal Gate.
+A passing status is:
+
+`READY_FOR_ADVERSARIAL_REVIEW_NOT_LIVE_RUN`
+
+It is **not** permission to run Qwen.
 
 ## Failure policy
-- SHA mismatch -> stop.
-- Thinking machinery unexpectedly present -> stop.
-- Model-weight-like file in tokenizer snapshot -> stop and rebuild tokenizer-only snapshot.
-- Vector mapping or norm reconciliation fails -> stop.
-- No exact A/C/D1 match among precommitted semantic variants -> redesign before inference; do not add filler after seeing activations.
-- Final audit and search disagree -> stop.
+- any byte/hash mismatch -> stop;
+- any model-weight-like file in tokenizer snapshot -> stop;
+- unexpected vector keys/shapes/layers -> stop;
+- random-control byte hash mismatch -> stop;
+- no exact A/S/D1 match -> stop and redesign before activations;
+- search/final tokenizer audit disagreement -> stop.
+
+No failed episode-free gate is bypassed by hand editing after seeing model activations.
