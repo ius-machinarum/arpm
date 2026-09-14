@@ -1,0 +1,47 @@
+name: Static episode-free audit
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  static-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Compile Python sources
+        run: python -m py_compile *.py
+
+      - name: Repository integrity
+        run: python ci_repo_integrity.py
+
+      - name: Static acquisition safety tests
+        run: python test_acquisition_static.py
+
+      - name: Static episode-free tests
+        run: python test_episode_free_static.py
+
+      - name: Static freeze tests
+        run: python test_freeze_static.py
+
+      - name: Prompt invariants
+        run: |
+          python - <<'PY'
+          import test_prompts_static as t
+          for name in sorted(dir(t)):
+              if name.startswith("test_"):
+                  getattr(t, name)()
+          print("PROMPT_INVARIANTS_PASS")
+          PY
