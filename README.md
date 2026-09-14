@@ -1,7 +1,7 @@
 # ARPM — Minimal S1/S2 Gate (research repository)
 
-> **Repository snapshot:** v0.5 episode-free preparation.  
-> **Status:** DRAFT / NO LIVE MODEL RUNS PERMITTED.  
+> **Repository snapshot:** Minimal S1/S2 episode-free freeze complete.  
+> **Status:** READY_FOR_ADVERSARIAL_REVIEW_NOT_LIVE_RUN.  
 > This repository is a research instrument, not evidence that language models are conscious or experience welfare.
 
 
@@ -66,10 +66,19 @@ In v0.3 the deterministic role-clause search could select a non-default A/C/D1 w
 - `REFEREE_QUESTIONS.md` — concentrated adversarial-review questions.
 
 ## Current gate
-Do **not** run Qwen. Complete the episode-free audit first, then adversarial review, then a separate ethical/scientific go/no-go decision.
+The episode-free technical audit is complete. Do **not** run Qwen. The next gate is one concentrated adversarial/referee review, followed by resolution of any blockers, a fresh literature check, and a separate ethical/scientific go/no-go decision.
+
+Frozen manifests:
+- `artifact_manifest.frozen.json`
+- `tokenizer_match.frozen.json`
+- `episode_free_audit.frozen.json`
 
 ## v0.5 passive acquisition helper
 
 `acquire_passive_artifacts.py` now turns the two remaining external-input steps into an allowlisted, episode-free acquisition path. It resolves the welfare-vector mirror's mutable `main` reference to the Hub-reported immutable commit before downloading the vector and refuses all model-weight-like filenames. See `PASSIVE_ACQUISITION.md`.
 
 This helper does not change the project status: **NO LIVE MODEL RUNS** until byte freeze, tokenizer matching, adversarial review and a separate go/no-go decision all pass.
+
+
+## Episode-free milestone
+No experimental model inference has been performed and no language-model weights were loaded. The external vector bytes, tokenizer bytes/template, and exact A/C/D1 token-position matching are now frozen prospectively. The v1 role wording failed exact token matching and was not relaxed; a symmetric v2 semantic set was versioned using tokenizer-only diagnostics, then passed exact matching across all 12 families. See `TOKENIZER_CALIBRATION_LOG.md`.
