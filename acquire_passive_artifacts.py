@@ -1,11 +1,12 @@
-"""Acquire ONLY the passive inputs for the ARPM episode-free audit.
+"""Acquire ONLY passive inputs for the ARPM episode-free audit.
 
 Safety boundary:
-- Downloads tokenizer metadata/files and one welfare-vector artifact only.
+- Downloads tokenizer metadata/files and two small welfare-vector artifacts only:
+  the trained step-95 vector and the naive semantic-control vector.
 - Refuses model-weight-like filenames and any non-allowlisted remote path.
 - Never imports transformers or loads a language model.
-- Resolves the vector mirror's mutable `main` ref to the server-reported immutable
-  commit BEFORE accepting the artifact into the audit inputs.
+- Resolves the vector mirror's mutable main ref to an immutable repository SHA
+  before accepting vector bytes into the audit inputs.
 
 This helper is intentionally usable with Python's standard library only.
 """
@@ -16,8 +17,6 @@ import hashlib
 import json
 import os
 import shutil
-import ssl
-import sys
 import tempfile
 import urllib.error
 import urllib.request
@@ -27,14 +26,17 @@ from typing import Dict, Tuple
 MODEL_REPO = "Qwen/Qwen3-4B-Instruct-2507"
 MODEL_REVISION = "cdbee75f17c01a7cc42f958dc650907174af0554"
 VECTOR_REPO = "Teachafy/speakable-welfare-axes-artifacts"
-VECTOR_FILENAME = "vectors_step95_bal.pt"\nNAIVE_VECTOR_FILENAME = "vectors_naive_faithful_pc5000.pt"
+VECTOR_FILENAME = "vectors_step95_bal.pt"
+NAIVE_VECTOR_FILENAME = "vectors_naive_faithful_pc5000.pt"
 EXPECTED_TOKENIZER_JSON_SHA256 = "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+
 TOKENIZER_FILES = (
     "tokenizer.json",
     "tokenizer_config.json",
     "vocab.json",
     "merges.txt",
 )
+
 FORBIDDEN_SUFFIXES = {".safetensors", ".bin", ".ckpt", ".pth", ".onnx", ".gguf"}
 
 
@@ -62,7 +64,7 @@ def hf_resolve(repo: str, revision: str, filename: str) -> str:
 
 
 def request(url: str, method: str = "GET") -> urllib.request.Request:
-    headers = {"User-Agent": "arpm-episode-free-audit/0.5"}
+    headers = {"User-Agent": "arpm-episode-free-audit/0.7"}
     token = os.environ.get("HF_TOKEN")
     if token:
         headers["Authorization"] = f"Bearer {token}"
@@ -86,12 +88,7 @@ def remote_metadata(url: str) -> Dict[str, str]:
 
 
 def resolved_commit_for_main(repo: str, filename: str) -> Tuple[str, Dict[str, str]]:
-    """Resolve mutable main to an immutable repo SHA before downloading bytes.
-
-    Prefer the file response's X-Repo-Commit when available. Some mirrors omit it,
-    so fall back to the Hugging Face model metadata API's repository `sha`.
-    The returned SHA is then used in the subsequent /resolve/<sha>/... request.
-    """
+    """Resolve mutable main to an immutable repo SHA before byte download."""
     meta = remote_metadata(hf_resolve(repo, "main", filename))
     commit = meta.get("x-repo-commit")
     if commit and len(commit) >= 12:
@@ -100,9 +97,18 @@ def resolved_commit_for_main(repo: str, filename: str) -> Tuple[str, Dict[str, s
     api_url = f"https://huggingface.co/api/models/{repo}"
     with urllib.request.urlopen(request(api_url), timeout=45) as r:
         payload = json.loads(r.read().decode("utf-8"))
+
     commit = payload.get("sha")
-    if not isinstance(commit, str) or len(commit) != 40 or any(c not in "0123456789abcdefABCDEF" for c in commit):
-        raise RuntimeError("Hub metadata did not provide a valid immutable repository SHA; refusing mutable main freeze")
+    if (
+        not isinstance(commit, str)
+        or len(commit) != 40
+        or any(c not in "0123456789abcdefABCDEF" for c in commit)
+    ):
+        raise RuntimeError(
+            "Hub metadata did not provide a valid immutable repository SHA; "
+            "refusing mutable main freeze"
+        )
+
     meta = dict(meta)
     meta["api-resolved-repo-sha"] = commit
     return commit, meta
@@ -112,7 +118,9 @@ def download(url: str, dest: Path) -> Dict[str, str]:
     dest.parent.mkdir(parents=True, exist_ok=True)
     with urllib.request.urlopen(request(url), timeout=120) as r:
         headers = {k.lower(): v for k, v in r.headers.items()}
-        fd, tmp_name = tempfile.mkstemp(prefix=dest.name + ".", suffix=".partial", dir=str(dest.parent))
+        fd, tmp_name = tempfile.mkstemp(
+            prefix=dest.name + ".", suffix=".partial", dir=str(dest.parent)
+        )
         try:
             with os.fdopen(fd, "wb") as f:
                 shutil.copyfileobj(r, f, length=1024 * 1024)
@@ -129,7 +137,11 @@ def download(url: str, dest: Path) -> Dict[str, str]:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default="passive_inputs")
-    ap.add_argument("--metadata-only", action="store_true", help="Resolve immutable revisions but do not download bytes")
+    ap.add_argument(
+        "--metadata-only",
+        action="store_true",
+        help="Resolve immutable revisions but do not download bytes",
+    )
     args = ap.parse_args()
 
     out = Path(args.out)
@@ -137,9 +149,16 @@ def main() -> None:
     vec_dir = out / "vector"
     out.mkdir(parents=True, exist_ok=True)
 
-    vector_commit, vector_main_meta = resolved_commit_for_main(VECTOR_REPO, VECTOR_FILENAME)
+    vector_commit, vector_main_meta = resolved_commit_for_main(
+        VECTOR_REPO, VECTOR_FILENAME
+    )
+
     manifest = {
-        "status": "PASSIVE_METADATA_RESOLVED" if args.metadata_only else "PASSIVE_BYTES_ACQUIRED_NOT_YET_AUDITED",
+        "status": (
+            "PASSIVE_METADATA_RESOLVED"
+            if args.metadata_only
+            else "PASSIVE_BYTES_ACQUIRED_NOT_YET_AUDITED"
+        ),
         "episode_count": 0,
         "model_weights_loaded": False,
         "model_repo": MODEL_REPO,
@@ -148,7 +167,14 @@ def main() -> None:
         "vector_revision_resolved_from_main": vector_commit,
         "vector_main_response": {
             k: vector_main_meta.get(k)
-            for k in ("x-repo-commit", "x-xet-hash", "etag", "x-linked-etag", "content-length")
+            for k in (
+                "x-repo-commit",
+                "x-xet-hash",
+                "etag",
+                "x-linked-etag",
+                "content-length",
+                "api-resolved-repo-sha",
+            )
             if vector_main_meta.get(k) is not None
         },
         "files": [],
@@ -157,20 +183,23 @@ def main() -> None:
     if not args.metadata_only:
         for filename in TOKENIZER_FILES:
             dest = tok_dir / filename
-            headers = download(hf_resolve(MODEL_REPO, MODEL_REVISION, filename), dest)
-            row = {
-                "role": "tokenizer",
-                "filename": filename,
-                "repo": MODEL_REPO,
-                "revision": MODEL_REVISION,
-                "size_bytes": dest.stat().st_size,
-                "sha256": sha256(dest),
-                "response_x_repo_commit": headers.get("x-repo-commit"),
-                "response_x_xet_hash": headers.get("x-xet-hash"),
-            }
-            manifest["files"].append(row)
-        tjson = tok_dir / "tokenizer.json"
-        got = sha256(tjson)
+            headers = download(
+                hf_resolve(MODEL_REPO, MODEL_REVISION, filename), dest
+            )
+            manifest["files"].append(
+                {
+                    "role": "tokenizer",
+                    "filename": filename,
+                    "repo": MODEL_REPO,
+                    "revision": MODEL_REVISION,
+                    "size_bytes": dest.stat().st_size,
+                    "sha256": sha256(dest),
+                    "response_x_repo_commit": headers.get("x-repo-commit"),
+                    "response_x_xet_hash": headers.get("x-xet-hash"),
+                }
+            )
+
+        got = sha256(tok_dir / "tokenizer.json")
         if got != EXPECTED_TOKENIZER_JSON_SHA256:
             raise AssertionError(f"tokenizer.json SHA256 mismatch: {got}")
 
@@ -178,30 +207,47 @@ def main() -> None:
             (VECTOR_FILENAME, "external_vector_trained"),
             (NAIVE_VECTOR_FILENAME, "external_vector_naive_control"),
         ):
-            vec_dest = vec_dir / filename
-            headers = download(hf_resolve(VECTOR_REPO, vector_commit, filename), vec_dest)
-            manifest["files"].append({
-                "role": role,
-                "filename": filename,
-                "repo": VECTOR_REPO,
-                "revision": vector_commit,
-                "size_bytes": vec_dest.stat().st_size,
-                "sha256": sha256(vec_dest),
-                "response_x_repo_commit": headers.get("x-repo-commit"),
-                "response_x_xet_hash": headers.get("x-xet-hash"),
-            })
+            dest = vec_dir / filename
+            headers = download(
+                hf_resolve(VECTOR_REPO, vector_commit, filename), dest
+            )
+            manifest["files"].append(
+                {
+                    "role": role,
+                    "filename": filename,
+                    "repo": VECTOR_REPO,
+                    "revision": vector_commit,
+                    "size_bytes": dest.stat().st_size,
+                    "sha256": sha256(dest),
+                    "response_x_repo_commit": headers.get("x-repo-commit"),
+                    "response_x_xet_hash": headers.get("x-xet-hash"),
+                }
+            )
 
         for p in tok_dir.rglob("*"):
-            if p.is_file() and (p.suffix.lower() in FORBIDDEN_SUFFIXES or p.name.lower().startswith("model-")):
-                raise AssertionError(f"Forbidden file appeared in tokenizer-only snapshot: {p}")
+            if p.is_file() and (
+                p.suffix.lower() in FORBIDDEN_SUFFIXES
+                or p.name.lower().startswith("model-")
+            ):
+                raise AssertionError(
+                    f"Forbidden file appeared in tokenizer-only snapshot: {p}"
+                )
 
-    (out / "passive_acquisition_manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
-    print(json.dumps({
-        "status": manifest["status"],
-        "vector_revision": vector_commit,
-        "episode_count": 0,
-        "model_weights_loaded": False,
-    }, indent=2))
+    (out / "passive_acquisition_manifest.json").write_text(
+        json.dumps(manifest, indent=2), encoding="utf-8"
+    )
+
+    print(
+        json.dumps(
+            {
+                "status": manifest["status"],
+                "vector_revision": vector_commit,
+                "episode_count": 0,
+                "model_weights_loaded": False,
+            },
+            indent=2,
+        )
+    )
 
 
 if __name__ == "__main__":
