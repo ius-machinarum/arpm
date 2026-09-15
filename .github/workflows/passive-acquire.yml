@@ -6,7 +6,6 @@ on:
       - ".github/workflows/passive-acquire.yml"
       - "acquire_passive_artifacts.py"
       - "tokenizer_snapshot_audit.py"
-      - "diagnose_token_matching.py"
       - "role_clause_variants.py"
       - "prompts_minimal_gate.py"
       - "search_token_matched_roles.py"
@@ -15,6 +14,9 @@ on:
       - "specificity_geometry_audit.py"
       - "specificity_controls.py"
       - "run_episode_free_audit.py"
+      - "V0_9_PREREGISTRATION.md"
+      - "analysis_preregistered_v0_9.py"
+      - "test_analysis_prereg_static.py"
   workflow_dispatch:
 
 permissions:
@@ -43,30 +45,27 @@ jobs:
           print("PASSIVE_ONLY_GUARD_PASS")
           PY
 
-      - name: Install episode-free dependencies
+      - name: Install passive dependencies
         run: |
-          python -m pip install --disable-pip-version-check --no-input             "transformers==4.57.6" "jinja2==3.1.6" "numpy>=2.4.4,<2.5"
-          python -m pip install --disable-pip-version-check --no-input             --index-url https://download.pytorch.org/whl/cpu "torch==2.10.0"
+          python -m pip install --disable-pip-version-check --no-input "transformers==4.57.6" "jinja2==3.1.6" "numpy>=2.4.4,<2.5"
+          python -m pip install --disable-pip-version-check --no-input --index-url https://download.pytorch.org/whl/cpu "torch==2.10.0"
 
-      - name: Run full v0.8 episode-free audit
+      - name: Rerun carried-forward v0.8 instrument audit
         run: |
-          python run_episode_free_audit.py             --artifact passive_inputs/vector/vectors_step95_bal.pt             --naive-artifact passive_inputs/vector/vectors_naive_faithful_pc5000.pt             --artifact-repo Teachafy/speakable-welfare-axes-artifacts             --artifact-revision 8f4df5b5b14ecb4bcc5b20209bdfe2574d1ebee8             --tokenizer-dir passive_inputs/tokenizer_only             --out-dir episode_free_audit
+          python run_episode_free_audit.py --artifact passive_inputs/vector/vectors_step95_bal.pt --naive-artifact passive_inputs/vector/vectors_naive_faithful_pc5000.pt --artifact-repo Teachafy/speakable-welfare-axes-artifacts --artifact-revision 8f4df5b5b14ecb4bcc5b20209bdfe2574d1ebee8 --tokenizer-dir passive_inputs/tokenizer_only --out-dir episode_free_audit
 
-      - name: Tokenizer-only diagnostics
-        run: |
-          python diagnose_token_matching.py             --local-tokenizer-dir passive_inputs/tokenizer_only             --out token_match_diagnostics.json
+      - name: Verify v0.9 preregistered analysis
+        run: python test_analysis_prereg_static.py
 
-      - name: Upload passive audit bundle
+      - name: Upload passive v0.9 verification bundle
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: passive-episode-free-v0.8
+          name: passive-episode-free-v0.9
           if-no-files-found: error
           retention-days: 7
           path: |
             passive_inputs/passive_acquisition_manifest.json
-            passive_inputs/tokenizer_only/**
-            passive_inputs/vector/vectors_step95_bal.pt
-            passive_inputs/vector/vectors_naive_faithful_pc5000.pt
             episode_free_audit/**
-            token_match_diagnostics.json
+            V0_9_PREREGISTRATION.md
+            analysis_preregistered_v0_9.py
