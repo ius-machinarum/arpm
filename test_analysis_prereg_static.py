@@ -30,7 +30,7 @@ def test_recovery_labels():
     primary=[1,1,1,1,1,1]
     r=recovery_companion(primary,[2]*6,[0]*6,[1]*6,[0]*6)
     assert r["label"]==COMPOSITION_NOT_EXCLUDED
-    r=recovery_companion(primary,[0.9]*6,[0]*6,[0]*6,[0]*6)
+    r=recovery_companion(primary,[0.9,0.9,0.9,0.9,0.9,1.2],[0]*6,[0]*6,[0]*6)
     assert r["mean_J"]>0 and r["p_J"]>=0.05
     assert r["label"]==COMPOSITION_INCONCLUSIVE
     r=recovery_companion(primary,[0]*6,[0]*6,[0]*6,[0]*6)
