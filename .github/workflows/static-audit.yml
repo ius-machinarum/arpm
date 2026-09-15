@@ -24,8 +24,11 @@ jobs:
       - name: Compile Python sources
         run: python -m py_compile *.py
 
-      - name: Repository integrity
-        run: python ci_repo_integrity.py
+      - name: Repository integrity v0.9
+        run: python ci_repo_integrity_v0_9.py
+
+      - name: v0.9 analysis preregistration tests
+        run: python test_analysis_prereg_static.py
 
       - name: Static acquisition safety tests
         run: python test_acquisition_static.py
