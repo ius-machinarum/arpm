@@ -10,8 +10,8 @@ ROOT = Path(__file__).resolve().parent
 SKIP = {Path(__file__).name, ".git"}
 TEXT_SUFFIXES = {".md", ".txt", ".py", ".json", ".yml", ".yaml", ".cff", ""}
 
+EMAIL_RX = re.compile(r"[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}", re.I)
 PATTERNS = {
-    "personal_email": re.compile(r"[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}", re.I),
     "windows_user_home": re.compile(r"[A-Za-z]:\\Users\\[^\\\s\"']+"),
     "unix_user_home": re.compile(r"/home/[A-Za-z0-9._-]+/"),
     "github_classic_token": re.compile(r"\bgh" + r"[pousr]_[A-Za-z0-9]{20,}\b"),
@@ -22,6 +22,10 @@ PATTERNS = {
     "bearer_credential": re.compile(r"\bBearer\s+[A-Za-z0-9._~+/=-]{20,}\b"),
 }
 FORBIDDEN_BINARY_SUFFIXES = {".pt", ".pth", ".bin", ".safetensors", ".gguf", ".ckpt", ".onnx"}
+
+def github_noreply(email: str) -> bool:
+    low = email.lower()
+    return low == "noreply@github.com" or low.endswith("@users.noreply.github.com")
 
 def main():
     findings = []
@@ -36,6 +40,9 @@ def main():
         if rel.name in SKIP or p.suffix.lower() not in TEXT_SUFFIXES:
             continue
         text = p.read_text(encoding="utf-8", errors="ignore")
+        for email in EMAIL_RX.findall(text):
+            if not github_noreply(email):
+                findings.append((str(rel), "personal_email"))
         for name, rx in PATTERNS.items():
             if rx.search(text):
                 findings.append((str(rel), name))
