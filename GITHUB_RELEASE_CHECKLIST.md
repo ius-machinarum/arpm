@@ -1,22 +1,29 @@
-# GitHub release checklist
+# GitHub public-release checklist
 
-Before making the repository public:
+## Completed before visibility change
 
-- [ ] Decide whether the project should use a real-name, pseudonymous, or anonymous-facing account.
-- [ ] If pseudonymous, configure GitHub's no-reply email before the first commit.
-- [ ] Confirm that git history contains no personal email addresses, local paths, tokens, API keys, or private correspondence.
-- [ ] Confirm that model/vector binary artifacts are excluded.
-- [ ] Confirm README and STATUS state `NO LIVE MODEL RUNS` accurately.
-- [ ] Complete episode-free artifact and tokenizer audits.
-- [ ] Complete the planned adversarial/referee review.
-- [ ] Record any protocol changes resulting from referee review.
-- [ ] Decide on a software/documentation license before public release.
-- [ ] Decide whether preregistration/OSF archival should precede public GitHub release.
+- [x] Public-facing maintainer identity is pseudonymous: **Ius Machinarum**.
+- [x] Commit history uses privacy-preserving GitHub no-reply email metadata.
+- [x] Full current tracked tree scanned for personal-email, local-path, credential/token and private-key patterns.
+- [x] All 159 commits present at audit time checked for author/committer email metadata.
+- [x] Existing issues and pull requests checked for release-sensitive patterns.
+- [x] Historical v0.8 referee ZIP scanned across all 54 entries.
+- [x] No model weights or vector binaries are committed to the Git tree.
+- [x] README prominently states **PRE-LIVE PREREGISTRATION — NO LIVE RESULTS**.
+- [x] README and STATUS state episode count 0 and no live authorisation.
+- [x] Episode-free tokenizer/vector/provenance audits pass.
+- [x] Three adversarial referee rounds completed before live data.
+- [x] Third-referee preregistration fixes frozen in v0.9.
+- [x] Fresh literature re-check completed before human go/no-go.
+- [x] Qwen and Teachafy external artifact sources checked as Apache-2.0.
+- [x] Third-party licensing/provenance recorded in `THIRD_PARTY_LICENSES.md`.
+- [x] Repeatable public-release privacy/status guard added to CI.
+- [x] Redundant uppercase v0.6 referee-summary duplicate removed; full canonical report retained.
+- [x] Project-level license decision made for this release: **no explicit ARPM reuse license yet**; public readability is not presented as reuse permission.
+- [x] OSF archival decision made for this release: **not a prerequisite** to the pre-live public GitHub release; it may be added separately later.
 
-## Identity / privacy before first commit
-- [ ] GitHub account or organisation is `ius-machinarum` (or another deliberately chosen pseudonymous account).
-- [ ] Git author name is set to `Ius Machinarum`.
-- [ ] Git author email is a GitHub no-reply address or another pseudonymous address.
-- [ ] No real name, personal email, local Windows username, absolute home-directory path, API token, or account identifier is present in tracked files or git history.
-- [ ] Repository is created **private** initially.
-- [ ] Repository name is `arpm`.
+## Final administrative action
+
+- [ ] GitHub repository visibility changed from **Private** to **Public** by the repository owner.
+
+The visibility switch is administrative only. It does not constitute the separate human scientific + ethical go/no-go and does not authorise live inference.
