@@ -1,22 +1,22 @@
 # ARPM — Agent-Relative Processing-Level Modulation
 
-> **Current snapshot:** v0.9 preregistration freeze  
-> **Status:** READY_FOR_LITERATURE_RECHECK_NOT_LIVE_RUN  
+> **Current snapshot:** v0.9 preregistration freeze + fresh literature re-check  
+> **Status:** READY_FOR_HUMAN_SCIENTIFIC_ETHICAL_GO_NO_GO_NOT_LIVE_RUN  
 > **Live episode count:** 0  
 > **No live inference is authorised.**
 
 Primary: `I=(A-S)-(C0-D1)`. Validity: `V=((A-C0)+(S-D1))/2`.
 
-The v0.8 experimental design is unchanged. v0.9 freezes the two zero-episode companion analyses required by the third adversarial review: the no-stake floor-compression diagnostic and recovery interaction `I_rec` with `J=I_primary-I_rec`.
+The experimental design remains the frozen v0.8 2x2. v0.9 freezes the third-referee compression and recovery-composition safeguards. Static and passive episode-free audits pass.
 
-Authoritative v0.9 files:
+The fresh literature re-check found no new design blocker for the narrow Minimal Gate, while strengthening the warning that linear readout semantics can reflect broader self-evaluative/evaluative-assent processing. `v_perp_u` is interpreted only as the u-orthogonal trained residual relative to the frozen naive construction, not as proof of a causally training-created or welfare-specific component.
+
+Current decision documents:
+- `LITERATURE_RECHECK_v0_9.md`;
+- `HUMAN_GO_NO_GO_v0_9.md`;
 - `V0_9_PREREGISTRATION.md`;
-- `analysis_preregistered_v0_9.py`;
-- `reviews/FABLE_REFEREE_v0_8.md`;
-- `REFEREE_RESPONSE_v0_8.md`.
+- `reviews/FABLE_REFEREE_v0_8.md`.
 
-Static v0.9 CI and the carried-forward passive v0.8 instrument audit both pass. The next project gate is a fresh literature re-check, followed by a separate human scientific + ethical go/no-go.
-
-A positive result, if a study is later authorised and run, is limited to a framing x stake interaction on an externally defined direction in one 4B model under teacher forcing. It does not establish agency, welfare, valence, consciousness, sentience, moral status or rights; a null does not establish their absence.
+The next gate is a separate human scientific + ethical go/no-go. No document, referee ruling or CI pass constitutes that human decision.
 
 Maintainer pseudonym: **Ius Machinarum**.
