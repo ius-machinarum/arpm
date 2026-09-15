@@ -9,7 +9,7 @@
 
 **PASS FOR PUBLIC READABILITY, SUBJECT TO THE FINAL GITHUB VISIBILITY SWITCH.**
 
-No public-release blocker was found in the repository content, Git history, project discussion history, or the still-retained v0.8 referee bundle.
+No public-release blocker was found in the repository content, Git history, project discussion history, representative Actions logs, or the still-retained v0.8 referee bundle.
 
 ## Checks performed
 
@@ -29,6 +29,16 @@ No public-release blocker was found in the repository content, Git history, proj
 ### GitHub discussions
 - Existing repository issues and pull requests were checked for the same release-sensitive patterns.
 - No release-sensitive match was found.
+
+### GitHub Actions exposure
+GitHub documents that Actions history and logs become visible when a private repository is made public.
+
+Representative successful logs were therefore scanned from:
+- the post-release-prep static audit;
+- the v0.9 passive episode-free acquisition/audit;
+- the v0.8 referee-bundle build.
+
+No personal-email, GitHub/OpenAI/AWS credential, private-key, or user-home-path exposure was found. Workflow definitions use read-only repository permissions for these audit paths, and GitHub masks its internal Actions token in logs.
 
 ### Historical referee archive
 - The existing `arpm-v0.8-referee-bundle.zip` was scanned across all 54 ZIP entries.
