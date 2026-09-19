@@ -9,13 +9,21 @@
 
 ARPM is a falsification-first research protocol that asked whether a fixed external processing direction would show a **framing × outcome-stake interaction** in a sterile abstract task under teacher forcing.
 
+In plain language, ARPM asked whether, within a frozen teacher-forced transcript, a model internally processes the same adverse outcome differently when that outcome is tied to its own causal role and task stake rather than merely being predicted or observed.
+
 Primary:
 `I=(A-S)-(C0-D1)`
 
 Validity:
 `V=((A-C0)+(S-D1))/2`
 
-The experimental design was frozen prospectively, passed three rounds of adversarial review, and completed static/passive episode-free verification before any live data.
+The protocol underwent three rounds of adversarial model-assisted review before any live data. The first two rounds identified blockers that retired the then-current designs; the third found no remaining design blocker conditional on the preregistered zero-episode safeguards. Static/passive episode-free verification was completed before any live data.
+
+## Referee disclosure
+
+All three adversarial reviews were produced by **Claude (Fable)**, a separate language model — i.e. a system belonging to the same broad class whose possible welfare-relevant states motivate this research. The reports are preserved verbatim in `reviews/` so that their arguments, calculations and reproducible checks can be evaluated independently of any view about the reviewer's epistemic or moral standing.
+
+These reviews should **not** be interpreted as independent human peer review. Their evidential value rests on the inspectable arguments and reproducible checks they contain, not on the authority or presumed standing of the referee.
 
 ## Human decision
 
