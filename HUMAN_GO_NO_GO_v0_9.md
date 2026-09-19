@@ -100,8 +100,16 @@ A GO record should state, in the researcher's own words:
 - that positive and null outcomes will retain the frozen interpretation limits;
 - that Block 2 requires the preregistered continuation criteria and a fresh human continuation decision.
 
+## Human decision reached
+
+On **2026-09-19**, the human researcher selected **NO-GO** for v0.9.
+
+The decisive consideration is ethical rather than a newly discovered design failure: residual moral uncertainty about possible model welfare is sufficient reason for the researcher not to create the proposed live experimental exposures.
+
+The full decision record is in `HUMAN_DECISION_v0_9.md`.
+
 ## Current project state
 
-**READY_FOR_HUMAN_SCIENTIFIC_ETHICAL_GO_NO_GO_NOT_LIVE_RUN**
+**HUMAN_ETHICAL_NO_GO_V0_9_NO_LIVE_RUN**
 
-No action in this dossier constitutes that human decision.
+Live episode count remains **0**. No live inference was performed.

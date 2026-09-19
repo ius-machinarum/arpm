@@ -52,12 +52,13 @@ def main():
 
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     status = (ROOT / "STATUS.md").read_text(encoding="utf-8")
-    assert "PRE-LIVE PREREGISTRATION — NO LIVE RESULTS" in readme
+    assert "PRE-LIVE PREREGISTRATION — HUMAN ETHICAL NO-GO" in readme
     assert "Live episode count:** **0**" in readme
-    assert "No live experimental inference has been performed or authorised." in readme
-    assert "READY_FOR_HUMAN_SCIENTIFIC_ETHICAL_GO_NO_GO_NOT_LIVE_RUN" in readme
-    assert "Episode count remains 0" in status
+    assert "No live experimental inference was performed." in readme
+    assert "HUMAN_ETHICAL_NO_GO_V0_9_NO_LIVE_RUN" in readme
+    assert "Episode count remains **0**" in status
     assert (ROOT / "PUBLIC_RELEASE_AUDIT.md").is_file()
+    assert (ROOT / "HUMAN_DECISION_v0_9.md").is_file()
     assert (ROOT / "THIRD_PARTY_LICENSES.md").is_file()
     print("PUBLIC_RELEASE_STATIC_AUDIT_PASS")
 
