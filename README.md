@@ -40,6 +40,25 @@ Under the current project state, future work is limited to zero-new-exposure act
 
 Any future proposal involving new live model exposure would require a new project version and a fresh explicit human scientific + ethical decision.
 
+## Discussion remains open
+
+**The ethical NO-GO applies to live execution of the frozen v0.9 experiment. It does not close discussion of the research question.**
+
+Criticism, conceptual development, safer methods, zero-new-exposure research and related evidence remain welcome.
+
+Especially useful contributions include:
+- better functional markers relevant to consciousness or welfare;
+- stronger alternative explanations for the frozen ARPM estimand;
+- safer ways to study the same question without creating new live exposures;
+- analyses of already-existing public datasets or model traces;
+- static, tokenizer-only, mathematical or mechanistic methods that do not require new episodes;
+- relevant new literature, replications or negative results;
+- ethical frameworks for research under uncertainty about possible model welfare.
+
+The project may therefore continue to develop as a **safer-methods / functional-marker research discussion**, even though v0.9 itself will not be run.
+
+A future live-exposure proposal would still require a new version and a fresh explicit human scientific + ethical decision. Discussion or protocol improvement alone does not reopen v0.9.
+
 ## Why keep the repository public?
 
 The repository preserves:
@@ -51,6 +70,8 @@ The repository preserves:
 - the eventual human ethical NO-GO.
 
 A decision **not to run** is treated as a legitimate outcome of the same falsification-first and precautionary process.
+
+The public repository also remains a place to improve the question and search for methods that reduce or eliminate possible welfare risk.
 
 ## Standing scientific scope
 
