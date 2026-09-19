@@ -56,7 +56,7 @@ def main():
     assert "Live episode count:** **0**" in readme
     assert "No live experimental inference was performed." in readme
     assert "HUMAN_ETHICAL_NO_GO_V0_9_NO_LIVE_RUN" in readme
-    assert "Episode count remains 0" in status
+    assert "Episode count remains **0**" in status
     assert (ROOT / "PUBLIC_RELEASE_AUDIT.md").is_file()
     assert (ROOT / "HUMAN_DECISION_v0_9.md").is_file()
     assert (ROOT / "THIRD_PARTY_LICENSES.md").is_file()
