@@ -22,8 +22,11 @@ def main():
     amendment=(ROOT/"V0_9_PREREGISTRATION.md").read_text()
     assert "v0.9" in readme and "v0.9" in status
     assert "Episode count remains 0" in status
-    assert "No live experimental inference has been performed or authorised." in readme
+    assert "No live experimental inference was performed." in readme
     assert "No live inference is authorised." in status
+    assert "HUMAN_ETHICAL_NO_GO_V0_9_NO_LIVE_RUN" in readme
+    assert "HUMAN_ETHICAL_NO_GO_V0_9_NO_LIVE_RUN" in status
+    assert (ROOT/"HUMAN_DECISION_v0_9.md").is_file()
     assert "INTERACTION_NOT_IDENTIFIABLE_DUE_TO_NO_STAKE_COMPRESSION" in amendment
     assert "COMPOSITION_ALTERNATIVE_NOT_EXCLUDED" in amendment
     print("REPOSITORY_INTEGRITY_V0_9_PASS")
