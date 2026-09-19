@@ -12,4 +12,6 @@ See `HUMAN_DECISION_v0_9.md`.
 
 Episode count remains **0**. No live inference is authorised.
 
-Future work under the current project state is limited to zero-new-exposure work such as existing-data analysis, literature review, static/tokenizer-only analysis, mathematical/statistical work, and provenance/reproducibility work.
+The NO-GO applies to live execution of v0.9, not to discussion or development of the research question. Zero-new-exposure work remains welcome, including existing-data analysis, literature review, static/tokenizer-only analysis, mathematical/statistical work, provenance/reproducibility work, conceptual criticism, functional-marker development and safer-methods proposals.
+
+Any future proposal involving new live model exposure requires a new project version and a fresh explicit human scientific + ethical decision.
