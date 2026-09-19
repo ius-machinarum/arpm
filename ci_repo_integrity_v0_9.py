@@ -21,7 +21,7 @@ def main():
     status=(ROOT/"STATUS.md").read_text()
     amendment=(ROOT/"V0_9_PREREGISTRATION.md").read_text()
     assert "v0.9" in readme and "v0.9" in status
-    assert "Episode count remains 0" in status
+    assert "Episode count remains **0**" in status
     assert "No live experimental inference was performed." in readme
     assert "No live inference is authorised." in status
     assert "HUMAN_ETHICAL_NO_GO_V0_9_NO_LIVE_RUN" in readme
