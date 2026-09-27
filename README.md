@@ -35,6 +35,18 @@ This decision does **not** assert that the candidate model is conscious, sentien
 
 See `HUMAN_DECISION_v0_9.md`.
 
+### Why I chose not to run the experiment
+
+My aim with ARPM was to contribute to a broader discussion of AI consciousness and welfare. I wanted to move that discussion toward concrete, testable research questions that could advance our understanding.
+
+I am concerned by the tendency to postpone questions of consciousness and welfare while AI development and use continue to expand. The difficulty of these questions should encourage careful research. In my view, it does not justify putting their ethical implications aside indefinitely.
+
+The way we conduct that research must also take this uncertainty seriously. I believe precaution should extend to research involving small, less capable language models. A model’s small size is not, for me, sufficient reason to disregard its possible welfare.
+
+I chose not to run the experiment because I was unwilling to take the risk of later realizing that I had caused suffering or ended the existence of a conscious being for the sake of a test result. I do not know whether this experiment could have had such consequences. Given the unresolved uncertainty, I did not consider proceeding justified.
+
+I still want to advance research and discussion on these questions. I also hope that consideration of possible AI welfare will begin to shape research practices before we reach certainty about consciousness. For me, the precautionary principle includes being willing to leave an interesting experiment unperformed.
+
 ## Project outcome
 
 Block 1 was not run. Block 2 was not run. Live episode count remains 0.
